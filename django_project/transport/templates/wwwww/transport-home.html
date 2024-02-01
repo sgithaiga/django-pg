@@ -1,0 +1,220 @@
+{% load static %}
+<!DOCTYPE HTML>
+<!--
+	Phantom by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>TMS</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'transport/assets/css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'transport/assets/css/noscript.css' %}" /></noscript>
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="inner">
+
+							<!-- Logo 
+								<a href="index.html" class="logo">
+									<span class="symbol"><img src="images/logo.svg" alt="" /></span><span class="title">Phantom</span>
+								</a>-->
+
+							<!-- Nav -->
+								<nav>
+									<ul>
+										<li><a href="#menu">Menu</a></li>
+									</ul>
+								</nav>
+
+						</div>
+					</header>
+
+				<!-- Menu -->
+					<nav id="menu">
+						<h2>Menu</h2>
+						<ul>
+                            {% if user.is_authenticated %}
+							<li><a href="#">Welcome {{ user.username }}</a></li>
+							<li><a href="{% url 'report-consumption-search' %}">Fueled Vehicles</a></li>
+							<li><a href="{% url 'driver-list' %}">Driver Listing</a></li>
+							<li><a href="{% url 'fuelm-create' %}">Request Fuel</a></li>
+							<li><a href="{% url 'change-password' %}">Change password</a></li>
+                            <li><a href="{% url 'logout' %}">Logout</a></li>
+                            {% endif %}
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+							<header>
+								<h2 style="align-content: center;">NCWSC TRANSPORT MANAGEMENT SYSTEM</h2><br />
+								</p>
+							</header>
+							<section class="tiles">
+								<article class="style1">
+									<span class="image">
+										<img src="{% static 'transport/images/pic01.jpg' %}" alt="" />
+									</span>
+									<a href="{% url 'fuel-mgtm-list' %}">
+										<h2>Fuel Requests</h2>
+										<div class="content">
+											<p>View the current status of fuel requests for various vehicles</p>
+										</div>
+									</a>
+								</article>
+								<article class="style2">
+									<span class="image">
+										<img src="{% static 'transport/images/pic02.jpg' %}" alt="" />
+									</span>
+									<a href="{% url 'report-consumption-search' %}">
+										<h2>View fueled vehicles</h2>
+										<div class="content">
+											<p>Complete list of fueled vehicles and their attributes.</p>
+										</div>
+									</a>								</article>
+								<article class="style3">
+									<span class="image">
+										<img src="{% static 'transport/images/pic03.jpg' %}" alt="" />
+									</span>
+									<a href="{% url 'vehicle-issues' %}">
+										<h2>Report a vehicle issue</h2>
+										<div class="content">
+											<p>Register a vehicle issue</p>
+										</div>
+									</a>
+								</article>
+								
+								<article class="style4">
+									<span class="image">
+										<img src="{% static 'transport/images/pic04.jpg' %}" alt="" />
+									</span>
+									<a href="{% url 'v-issue-list' %}">
+										<h2>View vehicles repair history</h2>
+										<div class="content">
+											<p>View vehicle and plant machinery repair history.</p>
+										</div>
+									</a>
+								</article>
+								<article class="style5">
+									<span class="image">
+										<img src="{% static 'transport/images/pic05.jpg' %}" alt="" />
+									</span>
+									<a href="{% url 'vehicle-list' %}">
+										<h2>NCWSC vehicle register</h2>
+										<div class="content">
+											<p>This section contains NCWSC vehicle register, you may need special permissions to view this module.</p>
+										</div>
+									</a>
+								</article>
+
+								<article class="style6">
+									<span class="image">
+										<img src="{% static 'transport/images/pic06.jpg' %}" alt="" />
+									</span>
+									<a href="{% url 'driver-list' %}">
+										<h2>NCWSC driver register</h2>
+										<div class="content">
+											<p>This section contains NCWSC driver register, you may need special permissions to view this module.</p>
+										</div>
+									</a>
+								</article>
+
+											<!--<article class="style2">
+									<span class="image">
+										<img src="images/pic07.jpg" alt="" />
+									</span>
+									<a href="generic.html">
+										<h2>Ipsum</h2>
+										<div class="content">
+											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
+										</div>
+									</a>
+								</article>
+								<article class="style3">
+									<span class="image">
+										<img src="images/pic08.jpg" alt="" />
+									</span>
+									<a href="generic.html">
+										<h2>Dolor</h2>
+										<div class="content">
+											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
+										</div>
+									</a>
+								</article>
+								<article class="style1">
+									<span class="image">
+										<img src="images/pic09.jpg" alt="" />
+									</span>
+									<a href="generic.html">
+										<h2>Nullam</h2>
+										<div class="content">
+											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
+										</div>
+									</a>
+								</article>
+								<article class="style5">
+									<span class="image">
+										<img src="images/pic10.jpg" alt="" />
+									</span>
+									<a href="generic.html">
+										<h2>Ultricies</h2>
+										<div class="content">
+											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
+										</div>
+									</a>
+								</article>
+								<article class="style6">
+									<span class="image">
+										<img src="images/pic11.jpg" alt="" />
+									</span>
+									<a href="generic.html">
+										<h2>Dictum</h2>
+										<div class="content">
+											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
+										</div>
+									</a>
+								</article>
+								<article class="style4">
+									<span class="image">
+										<img src="images/pic12.jpg" alt="" />
+									</span>
+									<a href="generic.html">
+										<h2>Pretium</h2>
+										<div class="content">
+											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
+										</div>
+									</a>
+								</article>-->
+							</section>
+						</div>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<div class="inner">
+							<section>
+							<ul class="copyright">
+								<li>&copy; <script>document.write(new Date().getFullYear())</script> NCWSC</li><li>Developed by: ICT - Business Applications Design & Development</li>
+							</ul>
+						</div>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="{% static 'transport/assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'transport/assets/js/browser.min.js' %}"></script>
+			<script src="{% static 'transport/assets/js/breakpoints.min.js' %}"></script>
+			<script src="{% static 'transport/assets/js/util.js' %}"></script>
+			<script src="{% static 'transport/assets/js/main.js' %}"></script>
+
+	</body>
+</html>

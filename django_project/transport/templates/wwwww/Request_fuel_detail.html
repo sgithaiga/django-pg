@@ -1,0 +1,72 @@
+{% extends "transport/base.html" %}
+{% block content %}
+
+{% if object.requested_by == user %}
+<div>
+  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'user-requests' object.requested_by.username %}">My requests</a>
+</div>
+{% endif %}
+
+<table class="table">
+    <thead>
+      <tr>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Registration Number:</td>
+        <td>{{ object.vehicle_registration_number }}</td>
+      </tr>
+      <tr>
+        <td>Region:</td>
+        <td>{{ object.region }}</td>
+      </tr>
+      <tr>
+        <td>Fuel amount requested:</td>
+        <td>{{ object.fuel_amount_requested }}</td>
+      </tr>
+      <tr>
+        <td>Price per ltr (Ksh):</td>
+        <td>{{ object.price_per_liter }}</td>
+      </tr>
+      <tr>
+        <td>Total (Ksh):</td>
+        <td>{{ object.total_price }}</td>
+      </tr>
+      <tr>
+        <td>Requested by:</td>
+        <td>{{ object.requested_by }}</td>
+      </tr>
+      <tr>
+        <td>Date Requested:</td>
+        <td>{{ object.date_requested }}</td>
+      </tr>
+      <tr>
+        <td>Approved by</td>
+        <td>{{ object.approved_by }}</td>
+      </tr>
+      <tr>
+        <td>Date Approved:</td>
+        <td>{{ object.date_approved }}</td>
+      </tr>
+      <tr>
+        <td>Approval status:</td>
+        <td>{% if object.approved == 1 %}<span class="badge badge-secondary">Approved for fuelling</span><i class="mdi mdi-checkbox-multiple-marked"></i>{% endif %}</td>
+      </tr> 
+      <tr>
+        <td>Fuel assignment</td>
+        <td>{% if object.fuel_issue_complete == 0 %}
+          Check to complete <a  href="#" aria-expanded="false"><i class="mdi mdi-checkbox-multiple-marked"></i></a>
+          {% else %}
+          <span class="badge badge-secondary">Vehicle fueled</span><i class="mdi mdi-checkbox-multiple-marked"></i>
+          {% endif %}</td>
+      </tr>    
+    </tbody>
+</table>
+        <hr></hr>
+        {% if object.approved == 1 and object.fuel_issue_complete == 1 %}
+        <button type="button" class="btn btn-success btn-lg btn-block" disabled>Vehicle fueled, Fuel request complete!</button>
+        {% endif %}
+      </div>
+    </article>
+{% endblock content %}

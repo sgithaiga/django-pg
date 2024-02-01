@@ -1,0 +1,78 @@
+{% extends "transport/base.html" %}
+{% block content %}
+
+{% if object.requested_by == user %}
+<div>
+  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'user-requests' object.requested_by.username %}">My requests</a>
+</div>
+{% endif %}
+
+<table class="table">
+    <thead>
+      <tr>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Registration Number:</td>
+        <td>{{ object.vehicle_registration_number }}</td>
+      </tr>
+      <tr>
+        <td>Region:</td>
+        <td>{{ object.region }}</td>
+      </tr>
+      <tr>
+        <td>Logged vehicle issue:</td>
+        <td>{{ object.Vehicle_issue_topic }}</td>
+      </tr>
+      <tr>
+        <td>Registered by:</td>
+        <td>{{ object.created_by }}</td>
+      </tr>
+      <tr>
+        <td>Date Issue Logged:</td>
+        <td>{{ object.date_created }}</td>
+      </tr>      
+      <tr>
+        <td>Mechanic Assessment (Ksh):</td>
+        <td>{{ object.mechanic_assesment }}</td>
+      </tr>
+      <tr>
+        <td>Mechanic</td>
+        <td>{{ object.mechanic }}</td>
+      </tr>
+      <tr>
+        <td>Part Requested</td>
+        <td>{{ object.further_works_required_remarks }}</td>
+      </tr>
+      <tr>
+        <td>Current Mileage:</td>
+        <td>{{ object.current_mileage }}</td>
+      </tr>
+      <tr>
+        <td>Next Mileage:</td>
+        <td>{{ object.next_service }}</td>
+      </tr>
+      <tr>
+        <td>Work Description:</td>
+        <td>{{ object.works_description }}</td>
+      </tr>
+      <tr>
+        <td>Works Approved by:</td>
+        <td>{{ object.transport_officer }}</td>
+      </tr>
+      <tr>
+        <td><bold>Parts requisition approved status</bold></td>
+        <td>
+          <span class="badge badge-primary">Parts requisition approved</span><i class="mdi mdi-checkbox-multiple-marked"></i>
+        </td>
+      </tr>    
+    </tbody>
+</table>
+        <hr></hr>
+        {% if object.approved == 1 and object.fuel_issue_complete == 1 %}
+        <button type="button" class="btn btn-success btn-lg btn-block" disabled>Vehicle fueled, Fuel request complete!</button>
+        {% endif %}
+      </div>
+    </article>
+{% endblock content %}

@@ -1,0 +1,79 @@
+{% extends "transport/base.html" %}
+{% block content %}
+<a class="btn btn-outline-info" type="submit" style="margin-bottom: 10px; margin-left: 4px;" href="{% url 'add-vehicle' %}"><i class="mdi mdi-plus-circle"></i>Register a new vehicle </a>
+<br>
+
+<h3>Search results</h3>
+
+<form method="get">
+    {{ filter.form.as_p }}
+    <button type="submit">Search</button>
+  </form>
+<table class="table table-hover">
+    <thead>
+      <tr>
+          <th scope="col">Vehicle Registration</th>
+          <th scope="col">Region</th>
+          <th scope="col">Fuel Type</th>
+          <th scope="col">Amount requested(Ltrs)</th>
+          <th scope="col">Price per ltr</th>
+          <th scope="col">Total</th>
+          <th scope="col">Requested by</th>
+          <th scope="col">Date requested</th>
+          <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for rq in filter.qs %}
+      <tr>
+          <td>{{ rq.vehicle_registration_number }}</td>
+          <td>{{ rq.region }}</td>
+          <td>{{ rq.fuel_type_requested }}</td>
+          <td>{{ rq.fuel_amount_requested }}</td>
+          <td>{{ rq.price_per_liter }}</td>
+          <td>{{ rq.total }}</td>
+          <td>{{ rq.requested_by }}</td>
+          <td>{{ rq.date_requested }}</td>
+
+          {% if rq.approved == 1 and rq.fuel_issue_complete == 1 %}
+          <td><a href="{% url 'request-fuel-details' rq.id %}"><span class="badge badge-success" data-toggle="tooltip" data-placement="right" title="vehicle fueled">Fueled</span></a></td>
+            {% elif rq.approved == 1 %}
+              <td><a href="{% url 'fuel-request-complete' rq.id %}"><span class="badge badge-info" data-toggle="tooltip" data-placement="right" title="Request approved for fuelling">Pending</span></a></td>
+              {% elif rq.declined == 1 %}
+              <td><a href="{% url 'fuel-request-complete' rq.id %}"><span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="Request declined">Declined</span></a>
+
+              </td>
+            {% else %}
+              <td><a href="{% url 'approve-request' rq.id %}"><span class="badge badge-primary" data-toggle="tooltip" data-placement="right" title="Request pending approval">New</span></a></td>
+
+          {% endif %}
+           
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+  
+      {% if is_paginated %}
+  
+        {% if page_obj.has_previous %}
+          <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+  
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+  
+        {% if page_obj.has_next %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+  
+      {% endif %}
+  
+{% endblock content %}

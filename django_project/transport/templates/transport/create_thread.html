@@ -1,0 +1,21 @@
+{% extends "transport/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Create Request</h2>
+    <hr>
+<div class="row">
+    <div class="col-md-10">
+        <form method = "POST">
+            {% csrf_token %}
+            <p><h4>Enter the username to assign request.</h4></p>
+            <fieldset class ="form-group">
+                {{ form|crispy }}
+            </fieldset>
+            <div class ="form-group">
+                <button class="btn btn-outline-info" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

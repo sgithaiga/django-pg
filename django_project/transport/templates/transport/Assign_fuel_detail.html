@@ -1,0 +1,40 @@
+{% extends "transport/base.html" %}
+{% block content %}
+<table class="table">
+  <thead>
+    <tr>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Date Fueled:</td>
+      <td>{{ object.date_posted|date:"F d, Y" }}</td>
+    </tr>
+    <tr>
+      <td>Vehicle:</td>
+      <td>{{ object.vehicle }}</td>
+    </tr>
+    <tr>
+      <td>Station served:</td>
+      <td>{{ object.station_name }}</td>
+    </tr>
+    <tr>
+      <td>Amount:</td>
+      <td>Ksh {{ object.amount }}</td>
+    </tr>
+    <tr>
+      <td>Liters Served (Ltr):</td>
+      <td>{{ object.liters_served }}</td>
+    </tr>
+    <tr>
+      <td>Odometer Reading:</td>
+      <td>{{ object.current_mileage }} Kms</td>
+    </tr>    
+    <tr>
+      <td>Attended by:</td>
+      <td>{{ object.entered_by }}</td>
+    </tr> 
+  </tbody>
+</table>
+{% endblock content %}
+

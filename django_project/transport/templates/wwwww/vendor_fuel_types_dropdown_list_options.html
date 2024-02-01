@@ -1,0 +1,4 @@
+<option value="">---------</option>
+{% for fuel_type in fuel_types %}
+<option value="{{ fuel_type.pk }}">{{ fuel_type.fuel_type }}</option>
+{% endfor %}

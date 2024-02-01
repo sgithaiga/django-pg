@@ -1,0 +1,64 @@
+{% extends "transport/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<table class="table">
+    <thead>
+      <tr><h2>Preliminary Report</h2>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Registration Number:</td>
+        <td>{{ object.vehicle_registration_number }}</td>
+      </tr>
+      <tr>
+        <td>Station:</td>
+        <td>{{ object.region }}</td>
+      </tr>
+      <tr>
+        <td>Mechanic Assessment:</td>
+        <td>{{ object.mechanic_assesment }}</td>
+      </tr>
+      <tr>
+        <td>Current mileage:</td>
+        <td>{{ object.current_mileage }} <small>Kms</small></td>
+      </tr>
+      <tr>
+        <td>Next service:</td>
+        <td>{{ object.next_service }} <small>Kms</small></td>
+      </tr>       
+      <tr>
+        <td>Vehicle Registered by:</td>
+        <td>{{ object.mechanic }}</td>
+      </tr>
+      <tr>
+        <td>Date Received:</td>
+        <td>{{ object.date_received }}</td>
+      </tr>
+      <tr>
+        <td>Vehicle Status</td>
+        <td><span class="badge badge-info">Pending Approval to Create work ticket</span>
+            <i class="fa fa-wrench" aria-hidden="true"></i></td>
+      </tr>
+     
+    </tbody>
+</table>
+<hr>
+<h3><bold>Enter works required</bold></h3>
+    
+<div class="row">
+    <div class="col-md-10">
+        <form method = "POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class ="form-group">
+                {{ form|crispy }}
+            </fieldset>
+            <div class ="form-group">
+                <button class="btn btn-outline-info" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,118 @@
+{% extends "transport/base.html" %}
+{% block content %}
+
+<h2>Details for Vehicle - {{ object.registration_no }} </h2>
+<table class="table">
+  <thead>
+    <tr>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Registration Number:</td>
+      <td>{{ object.registration_no }}</td>
+    </tr>
+    <tr>
+      <td>Chassis:</td>
+      <td>{{ object.chassis_number }}</td>
+    </tr>
+    <tr>
+    <tr>
+      <td>Region:</td>
+      <td>{{ object.region }}</td>
+    </tr>
+    <tr>
+      <td>Vehicle Make:</td>
+      <td>{{ object.make }}</td>
+    </tr>
+    <tr>
+      <td>Vehicle Model:</td>
+      <td>{{ object.model }}</td>
+    </tr>
+    <tr>
+      <td>Type:</td>
+      <td>{{ object.type }}</td>
+    </tr>
+    <tr> 
+      <tr>
+        <td>Engine number:</td>
+        <td>{{ object.engine_no }}</td>
+    </tr>      
+    <tr>
+      <td>Engine Capacity:</td>
+      <td>{{ object.engine_capacity }}</td>
+    </tr>
+    <tr>
+      <td>Fuel:</td>
+      <td>{{ object.fuel_type }}</td>
+    </tr>    
+    <tr>
+      <td>Drive Type:</td>
+      <td>{{ object.drive_type }}</td>
+    </tr>
+    <tr>
+      <td>Transmission:</td>
+      <td>{{ object.transmission }}</td>
+    </tr>
+    <tr>
+      <td>Body Type:</td>
+      <td>{{ object.body_type }}</td>
+    </tr>
+    <tr>
+      <td>Fuel Tank Capacity</td>
+      <td>{{ object.fuel_tank_capacity }} Liters</td>
+    </tr>
+    <tr>
+      <td>Operational Status:</td>
+      <td>{{ object.operational_status }}</td>
+    </tr>
+    <tr>
+      <td>Mechanical Status:</td>
+      <td>{{ object.mechanical_status }}</td>
+    </tr>     
+    <tr>
+      <td>Manufacture year</td>
+      <td>{{ object.manufacture_year }} </td>
+    </tr>
+    <tr>
+      <td>Gross weight:</td>
+      <td>{{ object.gross_weight }}</td>
+    </tr> 
+    <tr>
+      <td>Passengers:</td>
+      <td>{{ object.passengers }}</td>
+    </tr>
+    <tr>
+      <td>Tare weight:</td>
+      <td>{{ object.tare_weight }}</td>
+    </tr>    <tr>
+      <td>Tax class:</td>
+      <td>{{ object.tax_class }}</td>
+    </tr>   
+    <tr>
+      <td>Axles:</td>
+      <td>{{ object.axles }}</td>
+    </tr>    
+    <tr>
+      <td>Load capacity:</td>
+      <td>{{ object.load_capacity }}</td>
+    </tr>    
+    <tr>
+      <td>Registered by:</td>
+      <td>{{ object.registered_by }}</td>
+    </tr>
+    <tr>
+      <td>Vehicle registration date:</td>
+      <td>{{ object.vehicle_registration_date }}</td>
+    </tr>    
+    <tr>
+      <td>Date Registered:</td>
+      <td>{{ object.date_registered }}</td>
+    </tr>
+    <tr>
+      <td>Log book number:</td>
+      <td>{{ object.log_book_number }}</td>
+    </tr>   
+  </tbody>
+</table>
+{% endblock content %}

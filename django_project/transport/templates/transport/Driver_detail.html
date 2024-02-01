@@ -1,0 +1,54 @@
+{% extends "transport/base.html" %}
+{% block content %}
+<table class="table">
+  <thead>
+    <tr>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Driver Name:</td>
+      <td>{{ object.full_name }}</td>
+    </tr>
+    <tr>
+      <td>Pf Number:</td>
+      <td>{{ object.pf_no }}</td>
+    </tr>
+    <tr>
+      <td>Gender:</td>
+      <td>{{ object.gender }}</td>
+    </tr>
+    <tr>
+      <td>Region Assigned:</td>
+      <td>{{ object.region_assigned }}</td>
+    </tr>
+    <tr>
+      <td>License Number (Ksh):</td>
+      <td>{{ object.license_number }}</td>
+    </tr>
+    <tr>
+      <td>Expiry Date:</td>
+      <td>{{ object.expiry_date }}</td>
+    </tr>
+    <tr>
+      <td>Assigned Vehicle:</td>
+      <td>{{ object.assigned_vehicle }}</td>
+    </tr>
+    <tr>
+      <td>Job Title:</td>
+      <td>{{ object.job_title }}</td>
+    </tr>
+    <tr>
+    <tr>
+      <td>Driver History:</td>
+      <td>{{ object.driver_history }}</td>
+    </tr>
+      <tr>      
+        <td>Registered by:</td>
+      <td>{{ object.entered_by }}</td>
+    </tr>     
+  </tbody>
+</table>
+{% endblock content %}
+
+

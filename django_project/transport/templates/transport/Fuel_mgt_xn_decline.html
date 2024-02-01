@@ -1,0 +1,97 @@
+{% extends "transport/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+<table class="table">
+    <thead>
+      <tr>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Registration Number:</td>
+        <td>{{ object.registration_no }}</td>
+      </tr>
+      <tr>
+        <td>Region:</td>
+        <td>{{ object.region }}</td>
+      </tr>
+      <tr>
+        <td>Fuel amount requested:</td>
+        <td>{{ object.fuel_amount_requested }}</td>
+      </tr>
+      <tr>
+        <td>Price per ltr (Ksh):</td>
+        <td>{{ object.price_per_liter }}</td>
+      </tr>
+      <tr>
+        <td>Total (Ksh):</td>
+        <td>{{ object.total_price }}</td>
+      </tr>
+      <tr>
+        <td>Requested by:</td>
+        <td>{{ object.requested_by }}</td>
+      </tr>
+      <tr>
+        <td>Date Requested:</td>
+        <td>{{ object.date_requested }}</td>
+      </tr>
+      <tr>
+        <td>Approved by:</td>
+        <td>{{ object.approved_by }}</td>
+      </tr>
+      <tr>
+        <td>Date Approved:</td>
+        <td>{{ object.date_approved }}</td>
+      </tr>
+      <tr>
+        <td>Approval status:</td>
+        <td>{% if object.approved == 1 %}
+          <a href="{% url 'approval-pdf-view' object.id %}"><span class="badge badge-info" data-toggle="tooltip" data-placement="left" title="Download approval">Approved for fuelling </span><i class="mdi mdi-download"></i></a>
+          {% elif object.declined == 1 %}
+          <span class="badge badge-danger">Request for fuelling declined</span> <a href="#"> </a><i class="fas fa-sticky-note" data-toggle="modal" data-target="#Modal1"></i></a> 
+            <div class="modal fade" id="Modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true ">
+              <div class="modal-dialog" role="document ">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Request Declined</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true ">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                          <p>This request was declined because of:</p>
+                          
+                          <p>{{ object.reason }}</p>
+                          <p>Request declined by: {{ object.approved_by }}</p>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <a  class="btn btn-primary" href="{% url 'fuelm-create' %}">Create new request</a>
+                            <!--<a  class="btn btn-success" href="#">Update request</a>-->
+                        </div>                      
+                      </div>
+                  </div>
+              </div>
+          </div>          
+          {% endif %}
+        </td>
+      </tr>    
+    </tbody>
+</table>
+</div>
+    <hr></hr>
+    <article class="media content-section">
+        <form method = "POST">
+            {% csrf_token %}
+            <h4>Check to complete</h4>
+            <hr></hr>
+            <fieldset class ="form-group">
+                {{ form|crispy }}
+            </fieldset>
+            <div class ="form-group">
+                <button class="btn btn-outline-info" type="submit">Submit</button>
+            </div>
+        </form>    
+    </article>
+
+{% endblock content %}

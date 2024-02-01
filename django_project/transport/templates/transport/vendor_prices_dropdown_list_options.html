@@ -1,0 +1,4 @@
+<option value="">---------</option>
+{% for v_price in v_prices %}
+<option value="{{ v_price.pk }}">{{ v_price.fuel_price }}</option>
+{% endfor %}

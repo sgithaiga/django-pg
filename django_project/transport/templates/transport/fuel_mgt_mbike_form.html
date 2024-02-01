@@ -1,0 +1,213 @@
+
+{% extends "transport/base.html" %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h2>Create a motorcycle fuel request</h2>
+    <hr>
+<div class="row">
+    <div class="col-md-10">
+
+
+        <form method="post" id="fuelForm" data-prices-url="{% url 'ajax-load-prices' %}" data-vehicle-url="{% url 'ajax-load-vehicles' %}" data-codes-url="{% url 'ajax-load-codes' %}" data-vlocations-url="{% url 'ajax-load-vendor-locations' %}" data-fuel-types-url="{% url 'load-vendor-fuel-types' %}" data-vendor-prices-url="{% url 'ajax-load-vendor-prices' %}" data-vendor-discounts-url="{% url 'ajax-load-discounts' %}" novalidate>
+          {% csrf_token %}
+        
+          {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+          {% endfor %}
+        
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+              {% for error in form.non_field_errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        
+          {% for field in form.visible_fields %}
+            <div class="form-group">
+              {{ field.label_tag }}
+        
+              {% if form.is_bound %}
+                {% if field.errors %}
+                  {% render_field field class="form-control is-invalid" %}
+                  {% for error in field.errors %}
+                    <div class="invalid-feedback">
+                      {{ error }}
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  {% render_field field class="form-control is-valid" %}
+                {% endif %}
+              {% else %}
+                {% render_field field class="form-control" %}
+              {% endif %}
+        
+              {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+              {% endif %}
+            </div>
+          {% endfor %}
+        
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+   
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>        <script>
+
+
+      $("#id_region").change(function () {
+        var url = $("#fuelForm").attr("data-vehicle-url");  // get the url of the `load_cities` view
+        var region_id = $(this).val();  // get the selected country ID from the HTML input
+  
+        $.ajax({                       // initialize an AJAX request
+          url: url,                   // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+          data: {
+            'region': region_id       // add the country id to the GET parameters
+          },
+          success: function (data) {   // `data` is the return of the `load_cities` view function
+            $("#id_registration_no").html(data);  // replace the contents of the city input with the data that came from the server
+          }
+        });
+  
+      });
+
+      $("#id_region").change(function () {
+        var url = $("#fuelForm").attr("data-codes-url");  // get the url of the `load_cities` view
+        var region_id = $(this).val();  // get the selected country ID from the HTML input
+  
+        $.ajax({                       // initialize an AJAX request
+          url: url,                   // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+          data: {
+            'region': region_id       // add the country id to the GET parameters
+          },
+          success: function (data) {   // `data` is the return of the `load_cities` view function
+            $("#id_region_code").html(data);  // replace the contents of the city input with the data that came from the server
+          }
+        });
+  
+      });  
+      
+
+      
+  $("#id_vendor").change(function () {
+  var url = $("#fuelForm").attr("data-vlocations-url");  // get the url of the `load_cities` view
+  var vendor_name_id = $(this).val();  // get the selected country ID from the HTML input
+
+  $.ajax({                       // initialize an AJAX request
+    url: url,                   // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+    data: {
+      'vendor_name': vendor_name_id       // add the country id to the GET parameters
+    },
+    success: function (data) {   // `data` is the return of the `load_cities` view function
+      $("#id_vendor_location").html(data);  // replace the contents of the city input with the data that came from the server
+    }
+  });
+
+}); 
+
+
+$("#id_vendor").change(function () {
+  var url = $("#fuelForm").attr("data-fuel-types-url");  // get the url of the `load_cities` view
+  var vendor_name_id = $(this).val();  // get the selected country ID from the HTML input
+
+  $.ajax({                       // initialize an AJAX request
+    url: url,                   // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+    data: {
+      'vendor_name': vendor_name_id       // add the country id to the GET parameters
+    },
+    success: function (data) {   // `data` is the return of the `load_cities` view function
+      $("#id_fuel_type_requested").html(data);  // replace the contents of the city input with the data that came from the server
+    }
+  });
+
+});
+
+$("#id_fuel_type_requested").change(function () {
+  var url = $("#fuelForm").attr("data-vendor-discounts-url");  // get the url of the `load_cities` view
+  var fuel_type_requested_id = $(this).val();  // get the selected country ID from the HTML input
+
+  $.ajax({                       // initialize an AJAX request
+    url: url,                   // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+    data: {
+      'fuel_type_requested': fuel_type_requested_id       // add the country id to the GET parameters
+    },
+    success: function (data) {   // `data` is the return of the `load_cities` view function
+      $("#id_discount").html(data); 
+      console.log(data) // replace the contents of the city input with the data that came from the server
+    }
+  });
+
+}); 
+
+$("#id_fuel_type_requested").change(function () {
+        var url = $("#fuelForm").attr("data-vendor-prices-url");  // get the url of the `load_cities` view
+        var fuel_type_requested_id = $(this).val();  // get the selected country ID from the HTML input
+  
+        $.ajax({                       // initialize an AJAX request
+          url: url,                   // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+          data: {
+            'fuel_type_requested': fuel_type_requested_id       // add the country id to the GET parameters
+          },
+          success: function (data) {   // `data` is the return of the `load_cities` view function
+            $("#id_price_per_liter").html(data);
+            console.log(data)  // replace the contents of the city input with the data that came from the server
+          }
+        });
+  
+      });
+      
+  </script>
+
+<script>
+$('select[name="price_per_liter"]').change(function(){
+var val1 = $("#id_fuel_amount_requested").val(); // textbox value
+var val2 = $(this).val(); // select box value
+var val3 = val1 * val2; // multiply both value
+$("#id_total").val(val3);
+});
+</script>
+<!--<script type="text/javascript">
+
+    //function to calculate total
+
+function Totalprice() {
+  fuelprice = Number($('#id_price_per_liter').val());
+  amount = Number($('#id_fuel_amount_requested').val());
+      if(fuelprice && amount && !isNaN(fuelprice) && !isNaN(amount)){
+        $('#id_total_price').val(fuelprice * amount);
+      }
+      else {
+        $('#id_total').val(0);
+      }
+}
+</script>
+
+          if('#id_total_price' != fuelprice * amount ){
+        alert ('error')
+
+      }
+-->
+
+<script>
+
+function reMultiply() {
+  fuelprice = Number($('#id_fprice').val());
+  amount = Number($('#id_fuel_amount_requested').val());
+      if(fuelprice && amount && !isNaN(fuelprice) && !isNaN(amount)){
+        $('#id_total_price').val(fuelprice * amount);
+        console.log('fuelprice');
+      }
+      else {
+        $('#id_total_price').val(0);
+      }
+
+}  
+
+
+
+</script>
+{% endblock content %}

@@ -1,0 +1,365 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+ 
+    <title>NCWSC Generator Register</title>
+
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">    <!-- Custom CSS -->
+    <link href="{% static 'transport/assets/libs/flot/css/float-chart.css' %}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'transport/assets/extra-libs/multicheck/multicheck.css' %}">
+    <link href="{% static 'transport/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css' %}" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css" type="text/css" rel="stylesheet">       
+    <link href="{% static 'transport/dist/css/style.min.css' %}" rel="stylesheet">
+    <!--Datatables cdn-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.22/b-1.6.5/b-html5-1.6.5/b-print-1.6.5/fh-3.1.7/kt-2.5.3/r-2.2.6/datatables.min.css"/>
+ 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar" data-navbarbg="skin5">
+            <nav class="navbar top-navbar navbar-expand-md navbar-dark">
+                <div class="navbar-header" data-logobg="skin5">
+                    <!-- This is for the sidebar toggle which is visible on mobile only -->
+                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+                    <!-- ============================================================== -->
+                    <!-- Logo -->
+                    <!-- ============================================================== -->
+                    <a class="navbar-brand" href="{% url 'transport-home' %}">
+                         <!-- Logo text -->
+                        <span class="logo-text">
+                             <!-- dark Logo text -->
+                             <h3>TMS</h3>
+                            
+                        </span>
+                    </a>
+                    <!-- ============================================================== -->
+                    <!-- End Logo -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- Toggle which is visible on mobile only -->
+                    <!-- ============================================================== -->
+                    <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i class="ti-more"></i></a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin5">
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-left mr-auto">
+                        <li class="nav-item d-none d-md-block"><a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)" data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24"></i></a></li>
+                        <!-- ============================================================== -->
+                        <!-- Search -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item search-box"> <a class="nav-link waves-effect waves-dark" href="javascript:void(0)"><i class="ti-search"></i></a>
+                            <form class="app-search position-absolute">
+                                <input type="text" class="form-control" placeholder="Search &amp; enter"> <a class="srh-btn"><i class="ti-close"></i></a>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar" data-sidebarbg="skin5">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav" class="p-t-30">
+                        {% if user.is_authenticated %}
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-account-settings-variant"></i><span class="hide-menu">Hi {{ user.username }} </span></a>
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item"><a href="{% url 'change-password' %}" class="sidebar-link"><i class="mdi mdi-key-change"></i><span class="hide-menu"> Change password </span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'logout' %}" class="sidebar-link"><i class="mdi mdi-logout"></i><span class="hide-menu"> Logout </span></a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{% url 'transport-home' %}" aria-expanded="false"><i class="fas fa-home"></i><span class="hide-menu">Home</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-gas-station"></i><span class="hide-menu">Fuel Management </span></a>
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item"><a href="{% url 'fuel-mgt-list' %}" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu">Fuel Requests</span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'new-request' %}" class="sidebar-link"><i class="mdi mdi-gas-station"></i><span class="hide-menu"> Request Fuel </span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'report-consumption-list' %}" class="sidebar-link"><i class="mdi mdi-car-wash"></i><span class="hide-menu"> Vehicle fuel data </span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'report-consumption-search' %}" class="sidebar-link"><i class="mdi mdi-search-web"></i><span class="hide-menu"> Vehicle fuel data search </span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'tasks' %}" class="sidebar-link"><i class="mdi mdi-view-list"></i><span class="hide-menu"> My tasks </span></a></li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-human"></i><span class="hide-menu">Drivers</span></a>
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item"><a href="{% url 'driver-list' %}" class="sidebar-link"><i class="mdi mdi-format-list-bulleted-type"></i><span class="hide-menu">Driver Register</span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'driver-incidents-list' %}" class="sidebar-link"><i class="mdi mdi-exclamation"></i><span class="hide-menu">Driver incidences register </span></a></li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-car"></i><span class="hide-menu">Motor Vehicles </span></a>
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item"><a href="{% url 'vehicle-list' %}" class="sidebar-link"><i class="mdi mdi-format-list-bulleted-type"></i><span class="hide-menu">Vehicle Register</span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'v-issue-list' %}" class="sidebar-link"><i class="mdi mdi-exclamation"></i><span class="hide-menu">Vehicle incidences </span></a></li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-motorbike"></i><span class="hide-menu">Motor Cycles </span></a>
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item"><a href="{% url 'bikes-list' %}" class="sidebar-link"><i class="mdi mdi-format-list-bulleted-type"></i><span class="hide-menu">Motor Cycles List</span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'list-riders' %}" class="sidebar-link"><i class="mdi mdi-human"></i><span class="hide-menu">Motor Cycle Riders List</span></a></li>
+                            </ul>
+                        </li>                        
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fas fa-wrench"></i><span class="hide-menu">Motor Vehicles Parts </span></a>
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item"><a href="{% url 'parts:add_vehicle' %}" class="sidebar-link"><i class="fas fa-plus"></i><span class="hide-menu">Add new order item</span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'parts:list_vehicles' %}" class="sidebar-link"><i class="fas fa-list-ol"></i><span class="hide-menu">List part orders </span></a></li>
+                            </ul>
+                        </li>                        <!--<li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"><i class="mdi mdi-garage"></i><span class="hide-menu">Garage</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"><i class="mdi mdi-truck"></i><span class="hide-menu">Trucks and Plant machinery</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"><i class="mdi mdi-motorbike"></i><span class="hide-menu">Motor Bikes</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-table"></i><span class="hide-menu">Reports </span></a>
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item"><a href="form-basic.html" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Reports </span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'logout' %}" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Form Wizard </span></a></li>
+                            </ul>
+                        </li>-->
+
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12 d-flex no-block align-items-center">
+
+                      <a href="{% url 'new-generator' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true"><i class="mdi mdi-plus-circle"></i>Add new generator</a>
+                        <div class="ml-auto text-right">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'transport-home' %}">Home</a></li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Sales Cards  -->
+                <!-- ============================================================== -->
+
+                <!-- ============================================================== -->
+                <!-- Sales chart -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-md-flex align-items-center">
+
+                                </div>
+                                <div class="row">
+                                    <!-- column -->
+                                    <div class="col-lg-12">
+                                      <div class="container">
+                                        {% if messages %}
+                                        {% for message in messages %}
+                                          <div class="alert alert-{{ message.tags }}" alert-dismissible>
+                                              <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                            {{ message }}
+                                          </div>
+                                        {% endfor %}
+                                      {% endif %}
+                                        <table id="gen_lst" class="table table-striped table-bordered"> 
+                                          <thead>
+                                            <tr>
+                                              
+                                                <th scope="col">Serial number</th>
+                                                <th scope="col">Make</th>
+                                                <th scope="col">Model</th>
+                                                <th scope="col">Location</th>
+                                                <th scope="col">Output</th>
+
+                                              
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {% for post in posts %}
+                                            <tr>
+                                                <td>{{ post.serial_number }}</td>
+                                                <td>{{ post.make }}</td>
+                                                <td>{{ post.model }}</td>
+                                                <td>{{ post.location }}</td>
+                                                <td>{{ post.output }}</td>
+
+                                            </tr>
+                                            {% endfor %}
+                                          </tbody>
+                                        </table>
+                                          
+                                          
+                                              {% if is_paginated %}
+                                          
+                                                {% if page_obj.has_previous %}
+                                                  <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+                                                  <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                                {% endif %}
+                                          
+                                                {% for num in page_obj.paginator.page_range %}
+                                                  {% if page_obj.number == num %}
+                                                    <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                                                  {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                                    <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                                                  {% endif %}
+                                                {% endfor %}
+                                          
+                                                {% if page_obj.has_next %}
+                                                  <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                                  <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                                                {% endif %}
+                                          
+                                              {% endif %}
+                                                                              </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center">
+                <div class="container">
+                    <p style="text-align: center">&copy; <script>document.write(new Date().getFullYear())</script> NCWSC Developed by: ICT - Business Applications Design & Development</p>
+                </div>    
+            </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <!-- ============================================================== -->
+
+
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="{% static 'transport/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="{% static 'transport/assets/libs/popper.js/dist/umd/popper.min.js' %}"></script>
+    <script src="{% static 'transport/assets/libs/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'transport/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+    <script src="{% static 'transport/assets/extra-libs/sparkline/sparkline.js' %}"></script>
+    <!--Wave Effects -->
+    <script src="{% static 'transport/dist/js/waves.js' %}"></script>
+    <!--Menu sidebar -->
+    <script src="{% static 'transport/dist/js/sidebarmenu.js' %}"></script>
+    <!--Custom JavaScript -->
+    <script src="{% static 'transport/dist/js/custom.min.js' %}"></script>
+    <!--This page JavaScript -->
+    <!-- <script src="dist/js/pages/dashboards/dashboard1.js"></script> -->
+    <!-- Charts js Files -->
+    <script src="{% static 'transport/assets/libs/flot/excanvas.js' %}"></script>
+    <script src="{% static 'transport/assets/libs/flot/jquery.flot.js' %}"></script>
+    <script src="{% static 'transport/assets/libs/flot/jquery.flot.pie.js' %}"></script>
+    <script src="{% static 'transport/assets/libs/flot/jquery.flot.time.js' %}"></script>
+    <script src="{% static 'transport/assets/libs/flot/jquery.flot.stack.js' %}"></script>
+    <script src="{% static 'transport/assets/libs/flot/jquery.flot.crosshair.js' %}"></script>
+    <script src="{% static 'transport/assets/libs/flot.tooltip/js/jquery.flot.tooltip.min.js' %}"></script>
+    <script src="{% static 'transport/dist/js/pages/chart/chart-page-init.js' %}"></script>
+
+    <!--Datatables js-->
+    <script src="{% static 'transport/assets/extra-libs/multicheck/datatable-checkbox-init.js' %}"></script>
+    <script src="{% static 'transport/assets/extra-libs/multicheck/jquery.multicheck.js' %}"></script>
+    <script src="{% static 'transport/assets/extra-libs/DataTables/datatables.min.js' %}"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>    
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js   "></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+
+    <script>
+        /****************************************
+         *       Vehicle list Data Table                   *
+         ****************************************/
+    
+         $(document).ready( function () {
+        var table = $('#gen_lst').DataTable({
+            dom: 'Bfrtip',
+        buttons: [
+        'csv', 'excel', 'pdf'
+        ]
+        });
+        } );
+    
+    </script>
+
+
+</body>
+
+</html>

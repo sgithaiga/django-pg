@@ -1,0 +1,47 @@
+{% extends 'transport/base.html' %}
+
+{% block title %}Editing parts for {{ vehicle.registration_number }}{% endblock %}
+
+{% block content %}
+  <form action="" method="post" enctype="multipart/form-data">
+
+    {% for hidden_field in form.hidden_fields %}
+      {{ hidden_field.errors }}
+      {{ hidden_field }}
+    {% endfor %}
+
+    {% csrf_token %}
+
+    {{ form.management_form }}
+    {{ form.non_form_errors }}
+
+    <h3>Update Parts</h3>
+    {% for parts_form in form.forms %}
+      <hr>
+      <h5>
+        {% if parts_form.instance.id %}
+          Registration number: {{ parts_form.instance.Vehicle }} | 
+          Part name: {{ parts_form.instance.title|title }} | Quantity {{ parts_form.instance.quantity }}
+        {% else %}
+          {% if form.forms|length > 1 %}
+            Add another part
+          {% else %}
+            Add a part
+          {% endif %}
+        {% endif %}
+      </h5>
+      {% for hidden_field in parts_form.hidden_fields %}
+        {{ hidden_field.errors }}
+      {% endfor %}
+      <table>
+        {{ parts_form.as_table }}
+      </table>
+    {% endfor %}
+    <hr>
+    <p>
+      <button type="submit" value="Update collection" class="btn btn-primary w-100 mb-3">Update Parts</button>
+      <a href="{{ vehicle.get_absolute_url  }}" role="button" class="btn btn-secondary w-100">Cancel</a>
+    </p>
+  </form>
+
+{% endblock content %}

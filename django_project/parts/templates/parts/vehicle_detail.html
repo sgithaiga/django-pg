@@ -1,0 +1,29 @@
+{% extends 'transport/base.html' %}
+
+{% block title %}{{ vehicle.registration_number }}{% endblock %}
+
+{% block content %}
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <h3>Vehicle parts Details</h3>
+    <div class="d-flex d-flex-inline"><span class="pe-2">Registration number:</span> <h5>{{ vehicle.registration_number|title }}</h5></div>
+    <hr>
+        {% for part in vehicle.part_vehicle.all %}
+        <div class="small">Part ID: {{ part.id }}</div>
+        <div>Title: {{ part.title }}</div>
+        <hr>
+        {% endfor %}
+    <p>
+        <a href="{% url 'parts:vehicle_parts_edit' pk=vehicle.pk %}" role="button" class="btn btn-primary w-100 mb-2">Edit Vehicle Parts</a>
+        <a href="{% url 'parts:list_vehicles' %}" role="button" class="btn btn-secondary w-100">All Orders</a>
+    </p>
+
+
+{% endblock content %}

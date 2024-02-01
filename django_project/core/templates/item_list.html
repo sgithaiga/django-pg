@@ -1,0 +1,13 @@
+{% block content %}
+<h2>Here is a list of items</h2>
+
+
+{% for item in object_list %}
+{{item.get_category_display}}
+    {{ item.items }}
+    {{item.get_label_display}}
+    {{item.price}}
+    
+{% endfor %}
+
+{% endblock content%}

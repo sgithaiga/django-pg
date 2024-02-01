@@ -1,0 +1,4 @@
+<option value="">---------</option>
+{% for dst in discounts %}
+<option value="{{ dst.pk }}">{{ dst.discount_price }}</option>
+{% endfor %}

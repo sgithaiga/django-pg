@@ -1,0 +1,11 @@
+{% extends 'transport/base.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+
+    <h3>Parts Store Orders</h3>
+    <a href="{% url 'parts:list_vehicles' %}" role="button" class="btn btn-primary w-100 mb-2">All Vehicles</a>
+    <a href="{% url 'parts:add_vehicle' %}" role="button" class="btn btn-secondary w-100">Add a vehicle</a>
+
+{% endblock content %}

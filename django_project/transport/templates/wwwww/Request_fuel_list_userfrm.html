@@ -1,0 +1,71 @@
+{% extends "transport/base_fr.html" %}
+{% block content %}
+<h3 class="mb-3">My requests {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h3>
+<table id="request_lst" class="table table-striped table-bordered">
+  <thead>
+    <tr>
+        <th scope="col">Vehicle Registration</th>
+        <th scope="col">Region</th>
+        <th scope="col">Fuel Type</th>
+        <th scope="col">Amount requested(Ltrs)</th>
+        <th scope="col">Price per ltr</th>
+        <th scope="col">Total</th>
+        <th scope="col">Requested by</th>
+        <th scope="col">Date requested</th>
+        <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for post in posts %}
+    <tr>
+        <td>{{ post.vehicle_registration_number }}</td>
+        <td>{{ post.region }}</td>
+        <td>{{ post.fuel_type_requested }}</td>
+        <td>{{ post.fuel_amount_requested }}</td>
+        <td>{{ post.price_per_liter }}</td>
+        <td>{{ post.total }}</td>
+        <td>{{ post.requested_by }}</td>
+        <td>{{ post.date_requested }}</td>
+
+        {% if post.approved == 1 and post.fuel_issue_complete == 1 %}
+        <td><a href="{% url 'request-fuel-details' post.id %}"><span class="badge badge-success" data-toggle="tooltip" data-placement="right" title="vehicle fueled">Fueled</span></a></td>
+          {% elif post.approved == 1 %}
+            <td><a href="{% url 'fuel-request-complete' post.id %}"><span class="badge badge-info" data-toggle="tooltip" data-placement="right" title="Request approved for fuelling">Pending</span></a></td>
+            {% elif post.declined == 1 %}
+            <td><a href="{% url 'fuel-request-complete' post.id %}"><span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="Request declined">Declined</span></a>
+
+            </td>
+          {% else %}
+            <td><a href="{% url 'approve-request' post.id %}"><span class="badge badge-primary" data-toggle="tooltip" data-placement="right" title="Request pending approval">New</span></a><p>{% if post.requested_by == user %}<a href="{% url 'request-update' post.id %}"><i class="mdi mdi-table-edit"></i></a><a href="{% url 'request-delete' post.id %}"><i class="mdi mdi-delete"></i></a>{% endif %}</p></td>
+                
+        {% endif %}
+         
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+  
+  
+      {% if is_paginated %}
+  
+        {% if page_obj.has_previous %}
+          <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+  
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+  
+        {% if page_obj.has_next %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+          <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+  
+      {% endif %}
+  
+{% endblock content %}

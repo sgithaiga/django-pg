@@ -1,0 +1,40 @@
+{% extends "transport/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>test multiply</h2>
+    <hr>
+<div class="row">
+    <div class="col-md-10">
+        <form method = "POST">
+            {% csrf_token %}
+            <fieldset class ="form-group">
+                {{ form|crispy }}
+            </fieldset>
+            <div class ="form-group">
+                <button class="btn btn-outline-info" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+
+
+    function reMultiply() {
+        myBox1 = Number($('#id_price').val());
+        myBox2 = Number($('#id_quantity').val());
+            if(myBox1 && myBox2 && !isNaN(myBox1) && !isNaN(myBox2)){
+              $('#id_total').val(myBox1 * myBox2);
+            }
+            else {
+              $('#id_total').val(0);
+            }
+      }   
+</script>
+{% endblock content %}
+
+
+
+
+

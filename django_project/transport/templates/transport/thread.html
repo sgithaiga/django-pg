@@ -1,0 +1,67 @@
+{% extends "transport/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">@{{ thread.receiver }}</h4>
+                {% if message_list.all.count == 0 %}
+                <div class="row my-5">
+                  <div class="col-md-12">
+                    <p class="empty-text">No Messages</p>
+                  </div>
+                </div>
+                {% endif %}
+                <div class="chat-box scrollable" style="height:475px;">
+                    <!--chat Row -->
+                    {% for message in message_list %}
+                    <ul class="chat-list">
+                        <!--chat Row -->
+                        <li class="chat-item">
+                        {% if message.sender_user == request.user %}
+                            <div class="chat-content">
+                                <h6 class="font-medium">{{request.user}}</h6>
+                                <div class="box bg-light-info">{{ message.body }}</div>
+                            </div>
+                            <div class="chat-time">10:56 am</div>
+                        </li>
+                        <!--chat Row -->
+                        {% elif message.receiver_user == request.user%}
+                        <li class="chat-item">
+                            <div class="chat-img"><img src="assets/images/users/2.jpg" alt="user"></div>
+                            <div class="chat-content">
+                                <h6 class="font-medium">{{request.user}}</h6>
+                                <div class="box bg-light-info">{{ message.body }}</div>
+                            </div>
+                            <div class="chat-time">10:57 am</div>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                        <!--chat Row -->
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body border-top">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="input-field m-t-0 m-b-0">
+                            <form method="POST" action="{% url 'create-message' thread.pk %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ form | crispy }}                                        
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-outline-info" type="submit">Submit</button>                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

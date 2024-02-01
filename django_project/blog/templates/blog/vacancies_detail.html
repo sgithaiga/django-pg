@@ -1,0 +1,18 @@
+{% extends "blog/base.html" %}
+{% block content %}
+    <article class="media content-section">
+        <div class="media-body">
+        <div class="article-metadata">
+          <small class="text-muted">Date posted: {{ object.date_posted|date:"F d, Y" }}</small>
+        </div>
+        <h2 class="article-title">{{ object.title }}</h2>
+        <p class="article-content"><h4>About: </h4>{{ object.about }}</p>
+        <p class="article-content"><h4>Duties: </h4>{{ object.duties }}</p>
+        <p class="article-content"><h4>Qualifications:</h4>{{ object.qualifications }}</p>
+        <div>
+            <a class="btn btn-outline-info" type="submit" href="{% url 'post_application'  %}">Apply for position</a>
+          </div>
+
+      </div>
+    </article>
+{% endblock content %}

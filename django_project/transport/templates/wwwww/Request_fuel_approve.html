@@ -1,0 +1,63 @@
+{% extends "transport/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<table class="table">
+    <thead>
+      <tr>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Registration Number:</td>
+        <td>{{ object.registration_no }}</td>
+      </tr>
+      <tr>
+        <td>Station:</td>
+        <td>{{ object.region }}</td>
+      </tr>
+      <tr>
+        <td>Fuel amount requested:</td>
+        <td>{{ object.fuel_amount_requested }}</td>
+      </tr>
+      <tr>
+        <td>Fuel type requested:</td>
+        <td>{{ object.fuel_type_requested }}</td>
+      </tr>      
+
+      <tr>
+        <td>Total (Ksh):</td>
+        <td>{{ object.total_price }}</td>
+      </tr>
+      <tr>
+        <td>Requested by:</td>
+        <td>{{ object.requested_by }}</td>
+      </tr>
+      <tr>
+        <td>Date Requested:</td>
+        <td>{{ object.date_requested }}</td>
+      </tr>
+      <tr>
+        <td>Approval Status</td>
+        <td><span class="badge badge-info">Pending Approval to Fuel</span>
+            <i class="mdi mdi-alert-box"></i></td>
+      </tr>
+     
+    </tbody>
+</table>
+
+    <hr></hr>
+    <article class="media content-section">
+        <form method = "POST">
+            {% csrf_token %}
+            <h4>Select Action</h4>
+            <hr></hr>
+            <fieldset class ="form-group">
+                {{ form|crispy }}
+            </fieldset>
+            <div class ="form-group">
+                <button class="btn btn-outline-info" type="submit">Submit</button>
+            </div>
+        </form>    
+    </article>
+
+{% endblock content %}

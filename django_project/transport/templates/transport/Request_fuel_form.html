@@ -1,0 +1,78 @@
+{% extends "transport/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h2>Fuel Request Form </h2>
+    <hr>
+    <form method = "POST">
+        {% csrf_token %}
+        <fieldset class ="form-group">
+            {{ form|crispy }}
+        </fieldset>
+        <div class ="form-group">
+            <button class="btn btn-outline-info" type="submit">Submit</button>
+        </div>
+<!--        <div class="row">
+            <div class="col-md-10">
+                <div class="card">
+                    <form class="form-horizontal" method = "POST" action="transport/request_fuel/">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="region" class="col-sm-3 text-right control-label col-form-label">Region</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="region" name="region" placeholder="Select region">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="registration_no" class="col-sm-3 text-right control-label col-form-label">Registration no</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="registration_no" name="registration_no" placeholder="Select registration no">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="fuel_type_requested" class="col-sm-3 text-right control-label col-form-label">Fuel type requested</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="fuel_type_requested" name="fuel_type_requested" placeholder="Select fuel">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="price_per_liter" class="col-sm-3 text-right control-label col-form-label">Price per liter</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="price_per_liter" name="price_per_liter" placeholder="Price">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="fuel_amount_requested" class="col-sm-3 text-right control-label col-form-label">Fuel quantity requested</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="fuel_amount_requested" name="fuel_amount_requested" placeholder="Liters requested">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="total" class="col-sm-3 text-right control-label col-form-label">Total</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="total" name="total" placeholder="Total">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="driver_name" class="col-sm-3 text-right control-label col-form-label">Driver assigned vehicle</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="driver_name" name="driver_name" placeholder="Select current driver">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="current_mileage" class="col-sm-3 text-right control-label col-form-label">Current mileage</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="current_mileage" name="current_mileage" placeholder="Enter current mileage">
+                                </div>
+                            </div>                                                        
+                        </div>
+                        <div class="border-top">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+-->
+{% endblock content %}

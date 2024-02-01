@@ -1,0 +1,289 @@
+class Vehicle_make (models.Model):
+
+    ISUZU = 'Isuzu'
+    MITSUBISHI = 'Mitsubishi'
+    NISSAN = 'Nissan'
+    CASE = 'Case'
+    TOYOTA_HILUX = 'Toyota Hilux'
+    TOYOTA_LAND_CRUISER = 'Toyota Land Cruiser'
+    TOYOTA = 'Toyota'
+    MERCEDES_BENZ = 'Mercedes Benz'
+    MAN = 'Man'
+    IVECO = 'Iveco'
+    NEW_HOLLLAND = 'New Holland'
+    FIAT = 'Fiat'
+    JCB = 'JCB'
+
+
+    VEHICLE_MAKE = [
+        (ISUZU, ('Isuzu')),
+        (MITSUBISHI, ('Mitsubishi')),
+        (NISSAN, ('Nissan')),
+        (CASE, ('Case')),
+        (TOYOTA, ('Toyota')),
+        (MERCEDES_BENZ, ('Mercedes Benz')),
+        (MAN, ('Man')),
+        (IVECO, ('Iveco')),
+        (FIAT, ('Fiat')),
+        (IVECO, ('Iveco')),
+        (JCB, ('New JCB')),
+    ]
+
+    vehicle_make =  models.CharField(
+        max_length=200,
+        choices=VEHICLE_MAKE,
+        default=ISUZU,
+    )
+
+    def __str__(self):
+        return self.vehicle_make
+
+
+class Vehicle_model (models.Model):
+    vehicle_make = models.ForeignKey(Vehicle_make, on_delete=models.CASCADE, related_name = 'vmake', null=True)
+    vehicle_model = models.CharField(max_length=100, null=True)
+
+
+class Vehicle_register (models.Model):
+
+    NA = 'not applicable'
+    OPERATIONAL = 'operational'
+    GROUNDED = 'grounded'
+    SERVICABLE = 'servicable'
+    ACCIDENT = 'accident'
+    ACCIDENT_WRITE_OFF = 'write off'
+    INSURANCE = 'insurance'
+    ECONOMICAL_TO_REPAIR = 'reparable'
+    UN_ECONOMICAL_TO_REPAIR = 'not reparable'
+    REPAIRS = 'Repairs in progress'
+    HEADQUARTERS = 'Headquarters'
+    EASTERN_REGION = 'Eastern Region'
+    CENTRAL_REGION = 'Central Region'    
+    NORTHERN_REGION = 'Northern Region'
+    NORTH_EASTERN = 'North Eastern'
+    SOUTHERN_REGION = 'Southern Region'
+    WESTERN_REGION = 'Western Region'
+    INFORMAL_SETTLEMENT_REGION = 'Informal Settlements Region'
+    RUAI = 'Ruai'
+    GIGIRI = 'Gigiri'
+    KABETE_LABORATORY = 'Kabete Laboratory'
+    KABETE_TREATMENT_WORKS = 'Kabete Treatment Works'
+    RUIRU_DAM = 'Ruiru Dam'
+    NGETHU_TREATMENT_WORKS = 'Ngethu Treatment Works'
+    THIKA_DAM = 'Thika Dam'
+    SASUMUA_TREATMENT_WORKS = 'Sasumua Treatment Works'
+    KARIOBANGI_TREATMENT_WORKS = 'Kariobangi Treatment Works'
+    MANUAL_TRANS = 'Manual Transmission'
+    AUTO_TRANS = 'Automatic Transmission'
+    REAR_WHEEL_DRIVE = 'Rear Wheel Drive'
+    FOUR_WHEEL_DRIVE = 'Four Wheel Drive'
+    DOUBLE_CAB = 'Double Cab'
+    TIPPER = 'Tipper'
+    TANKER = 'Tanker'
+    LOW_LOADER = 'Low Loader'
+    SALOON = 'Saloon'
+    EXCAVATOR = 'Excavator'
+    SUV = 'SUV'
+    MOTOR_BIKE = 'motor Bike'
+    PICKUP = 'Pick up'
+    LORRY = 'Lorry'
+    BACKHOE_LOADER = 'Backhoe Loader'
+    STATION_WAGON = 'Station Wagon'
+    VAN = 'Van'
+    SPECIAL_PURPOSE = 'Special Purpose'
+    PRIME_MOVER = 'Prime Mover'
+    TRACTOR = 'Tractor'
+    L_SIDED = 'L_Sided'
+    WHITE = 'White'
+    WHITE_CREAM = 'White_cream'
+    WHITE_BLUE = 'White_blue'
+    WHITE_GREEN = 'White_green'
+    GREY_METALLIC = 'Metallic grey'
+    BLUE = 'Blue'
+    SILVER = 'Silver'
+    DARK_STEEL = 'Dark steel'
+    YELLOW = 'Yellow'
+    GREY_BLUE = 'Grey blue'
+    GOLD = 'Gold'
+    GREEN = 'Green'
+    COMMERCIAL_GOODS = 'Commercial goods'
+    PRIVATE = 'Private'
+
+    
+
+
+    REGIONS = [
+        (HEADQUARTERS, ('Headquarters')),
+        (EASTERN_REGION, ('Eastern Region')),
+        (CENTRAL_REGION, ('Central Region')),
+        (NORTHERN_REGION, ('Northern Region')),
+        (NORTH_EASTERN, ('North Eastern')),
+        (SOUTHERN_REGION, ('Southern Region')),
+        (WESTERN_REGION, ('Western Region')),
+        (INFORMAL_SETTLEMENT_REGION, ('Informal Settlements Region')),
+        (RUAI, ('Ruiru Dam')),
+        (GIGIRI, ('Gigiri')),
+        (KABETE_LABORATORY, ('Kabete Laboratory')),
+        (RUIRU_DAM, ('Ruiru Dam')),
+        (NGETHU_TREATMENT_WORKS, ('Ngethu Treatment Works')),
+        (THIKA_DAM, ('Thika Dam')),
+        (SASUMUA_TREATMENT_WORKS, ('Sasumua Treatment Works')),
+        (KARIOBANGI_TREATMENT_WORKS, ('Kariobangi Treatment Works')),
+    ]
+    
+    OPERATIONAL_STATUS = [
+        (OPERATIONAL, ('Operational')),
+        (GROUNDED, ('Grounded')),
+        (NA, ('Not Applicable')),
+        
+    ]
+
+    TRANSMISSION = [
+        (MANUAL_TRANS, ('Manual Transmission')),
+        (AUTO_TRANS, ('Automatical Transmission')),
+
+    ]
+
+    POWERTRAIN = [
+        (REAR_WHEEL_DRIVE, ('Rear Wheel Drive')),
+        (FOUR_WHEEL_DRIVE, ('Four Wheel Drive')),
+    ]
+
+    BODY_TYPES = [
+        (DOUBLE_CAB, ('Double Cab')),
+        (TIPPER, ('Tipper')),    
+        (TANKER, ('Tanker')),
+        (LOW_LOADER, ('Low Loader')),
+        (SALOON, ('Saloon')),
+        (EXCAVATOR, ('Excavator')),
+        (SUV, ('SUV')),
+        (PICKUP, ('Pickup')),
+        (LORRY, ('Lorry')),
+        (BACKHOE_LOADER, ('Backhoe loader')),
+        (STATION_WAGON, ('Station wagon')),
+        (VAN, ('Van')),
+        (SPECIAL_PURPOSE, ('Secial purpose')),
+        (PRIME_MOVER, ('Prime mover')),
+        (TRACTOR, ('Tractor')),
+        (L_SIDED, ('L_sided')),
+
+    ]
+
+    COLORS = [
+        (WHITE, ('White')),
+        (WHITE_BLUE, ('White blue')),
+        (WHITE_CREAM, ('White cream')),
+        (WHITE_GREEN, ('White green')),
+        (GREY_METALLIC, ('Grey metallic')),
+        (BLUE, ('Blue')),
+        (SILVER, ('Silver')),
+        (DARK_STEEL, ('Dark steel')),
+        (YELLOW, ('Yellow')),
+        (GREEN, ('Green')),
+        (GREY_BLUE, ('Grey blue')),
+        (GOLD, ('Gold')),
+        (GREEN, ('Green')),
+        (GREY_BLUE, ('Grey blue')),
+
+    ]
+
+    TAX_CLASS = [
+        (COMMERCIAL_GOODS, ('Commercial goods')),
+        (PRIVATE, ('Private')),
+    ]
+
+
+    registration_no = models.CharField(max_length=100, unique=True)
+    chassis_no = models.CharField(max_length=100, unique=True)
+    region = models.ForeignKey(station, on_delete=models.CASCADE, null=True)
+    make = models.ForeignKey(Make, on_delete=models.CASCADE, null=True)
+    model = models.ForeignKey(Model, on_delete=models.CASCADE, null=True)
+    type =  models.CharField(max_length=100, null=True)
+    body = models.CharField(
+        max_length=200,
+        choices=BODY_TYPES,
+        default=NA,
+    )
+    fuel = models.CharField(max_length=50, null=True)
+    manufacture_year = models.DateField()
+    engine_rating = models.IntegerField()
+    engine_no = models.CharField(max_length=100, null=True)
+    color = models.CharField(max_length=50, choices=COLORS, default=WHITE)
+    vehicle_registration_date = models.DateField()
+    gross_weight = models.IntegerField()
+    passengers = models.IntegerField()
+    tare_weight = models.IntegerField()
+    tax_class = models.CharField(max_length=50, choices=TAX_CLASS, default = NA)
+    axles = models.IntegerField()
+    load_capacity = models.IntegerField()
+    operational_status = models.CharField(
+        max_length=200,
+        choices=OPERATIONAL_STATUS,
+        default=NA,
+    )    
+    log_book_number = models.CharField(max_length=100, null=True)
+    registered_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True) 
+    date_registered = models.DateTimeField(default=timezone.now)
+
+
+
+    def __str__(self):
+        return self.registration_no
+
+    def get_absolute_url(self):
+        # returns  to the vehicle list 
+        return reverse('vehicle-list')
+
+
+1. models develop vendor, vendor station, vendor fuel types, vendor prices. ###Done
+2. create form classes with init override functions ###Done
+3. views: develop views for loading data to options.html templates ###Done
+4. urls: create url views to views ###Done
+5. create the options html files ###Done
+6. create the fuel form and add jquery functions to load data to the select boxes
+7. submit data
+
+final
+combine all the forms
+update views and urls
+update template variables
+
+update pdf view ###Done
+update urls in list page
+create CRUD views for the workflow algorithm
+create CRUD urls for the workflow algorithm.
+create templates for the CRUD algorithm
+Done:
+######Detail view after fueling 
+Delete view
+Delete urls
+Delete template
+
+Report search in reports app:
+updated the view function to include new fuel model
+Reatined the urls
+Retained the templates
+changed the variables in the template to match new model
+
+edit Fuel_mgt_xn model get_fuel_issued_price(self) method
+update fuel urls on all base files and list files in reports and transport apps
+update urls on user list view template
+
+###today
+update fuel issue form to display messages
+update fuel create and templates to display messages
+
+
+/////////////
+separate signatures from the information
+group signatures by organization
+1. company
+2. vendor
+
+Give form an unique name/number/date/ID
+Use Names on the form
+
+warning/note message on the fuel issuance form
+
+fuel issue complete set to true and hide field
+order by date desc fuel on fuelmgtlist

@@ -1,0 +1,247 @@
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Fuel Authorization</title>
+  </head>
+  <body>
+    <h1>Nairobi City Water and Sewerage Company Ltd</h1><br>
+    <h1>Fuel Authorization Form</h1><hr>
+    <small>NCWSC/HRAD/TRANS/{{approval.region_code}}/0{{approval.id}}/FORM1</small>
+    <small>Document version 1.0</small>
+    <p>
+    <small>Request Ref:{{approval.request_reference}}</small>
+    </p>
+    <div class="container">
+
+        <table cellpadding="10" cellspacing="10" style="width: 100%;line-height: inherit;text-align: justify;">
+
+            <tr class="details">
+                <td style="padding: 5px;vertical-align: top;padding-bottom: 20px;">
+                    Region: 
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;padding-bottom: 35px;">
+                    {{approval.region}}
+                </td>
+            </tr>
+            
+            <tr class="heading">
+                <td style="padding: 5px;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+            </tr>
+            
+            <tr class="item">
+                <td style="padding: 5px;vertical-align: top;border-bottom: 1px solid #eee;">
+                    Vehicle Registration
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;border-bottom: 1px solid #eee;">
+                    {{approval.registration_no}}
+                </td>
+            </tr>
+            <tr class="heading">
+                <td style="padding: 5px;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+            </tr>            <tr class="item last">
+                <td style="padding: 5px;vertical-align: top;border-bottom: none;">
+                    Fuel amount requested: 
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;border-bottom: none;">
+                    {{approval.fuel_amount_requested}}
+                </td>
+            </tr>
+            <tr class="heading">
+                <td style="padding: 5px;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+            </tr>
+            <tr class="item last">
+                <td style="padding: 5px;vertical-align: top;border-bottom: none;">
+                    Price per ltr (Ksh):  
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;border-bottom: none;">
+                    {{approval.price_per_liter}} 
+                </td>
+            </tr>
+            <tr class="heading">
+                <td style="padding: 5px;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+            </tr>
+            <tr class="item last">
+                <td style="padding: 5px;vertical-align: top;border-bottom: none;">
+                    Total (Ksh):
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;border-bottom: none;">
+                    {{approval.total_price}} 
+                </td>
+            </tr>
+            <tr class="heading">
+                <td style="padding: 5px;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+            </tr>
+            <tr class="item last">
+                <td style="padding: 5px;vertical-align: top;border-bottom: none;">
+                    Requested by: {{approval.requested_by}} 
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;border-bottom: none;">
+                    Sign_________________________________ 
+                </td>
+            </tr>
+            <tr class="heading">
+                <td style="padding: 5px;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+            </tr>
+            <tr class="item last">
+                <td style="padding: 5px;vertical-align: top;border-bottom: none;">
+                    Date Requested: 
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;border-bottom: none;">
+                    {{approval.date_requested}} 
+                </td>
+            </tr>
+            <tr class="heading">
+                <td style="padding: 5px;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+            </tr>
+            <tr class="item last">
+                <td style="padding: 5px;vertical-align: top;border-bottom: none;">
+                    Approved by: {{approval.approved_by}}    
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;border-bottom: none;">
+                    Sign_________________________________   
+                </td>
+            </tr>
+            <tr class="heading">
+                <td style="padding: 5px;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+            </tr>
+            <tr class="item last">
+                <td style="padding: 5px;vertical-align: top;border-bottom: none;">
+                    Date Approved: 
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;border-bottom: none;">
+                    {{approval.date_requested}} 
+                </td>
+            </tr>
+            <tr class="heading">
+                <td style="padding: 5px;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+            </tr>            
+            <tr class="total">
+                <td style="padding: 5px;vertical-align: top;">
+                    Station fueled:_________________________________
+                </td>
+
+                <td style="padding: 5px;vertical-align: top;text-align: right;border-top: 2px solid #eee;font-weight: bold;">
+                    Stamp/Sign:_________________________________
+                </td>
+            </tr>
+            <tr class="heading">
+                <td style="padding: 5px;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+            </tr>
+            <tr class="total">
+                <td style="padding: 5px;vertical-align: top;">
+                    Actual Liters issued:_________________________________
+                </td>
+
+                <td style="padding: 5px;vertical-align: top;text-align: right;border-top: 2px solid #eee;font-weight: bold;">
+                    Attendant name & Sign:_________________________________
+                </td>
+            </tr>
+            <tr class="heading">
+                <td style="padding: 5px;vertical-align: top;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;background: #eee;border-bottom: 1px solid #ddd;font-weight: bold;">
+                    
+                </td>
+            </tr>
+            <tr class="item">
+                <td style="padding: 5px;vertical-align: top;border-bottom: 1px solid #eee;">
+                    Driver fuelling vehicle: {{approval.driver_name}}
+                </td>
+                
+                <td style="padding: 5px;vertical-align: top;text-align: right;border-bottom: 1px solid #eee;">
+                    Sign:_________________________________
+                </td>
+            </tr>            
+            
+        </table>
+    </div>
+       
+   </body>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+   
+       
