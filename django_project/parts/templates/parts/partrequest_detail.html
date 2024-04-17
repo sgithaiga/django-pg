@@ -1,0 +1,45 @@
+{% extends "transport/base.html" %}
+{% block content %}
+<table class="table">
+  <thead>
+    <tr><h3>Part request details for reg. no {{ object.registration_number }}</h3>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Registration number:</td>
+      <td>{{ object.registration_number }}</td>
+    </tr>
+    <tr>
+      <td>Part name:</td>
+      <td>{{ object.part_name }}</td>
+    </tr>
+    <tr>
+      <td>Part serial number:</td>
+      <td>{{ object.serial_number }}</td>
+    </tr>
+    <td>Quantity ordered:</td>
+      <td>{{ object.quantity }}</td>
+    </tr>
+    <tr>
+      <td>delivery status:</td>
+      <td>{{ object.delivered }}</td>
+    </tr>
+    <tr>
+      <td>Date of delivery:</td>
+      <td>{{ object.date_delivered }}</td>
+    </tr>
+    <tr>
+    <tr>
+      <td>Part Installation status:</td>
+      <td>{{ object.fitted }}</td>
+    </tr>
+      <tr>      
+        <td>Date of Installation:</td>
+      <td>{{ object.date_fitted }}</td>
+    </tr>     
+  </tbody>
+</table>
+{% endblock content %}
+
+

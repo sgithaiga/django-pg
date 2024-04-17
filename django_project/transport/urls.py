@@ -68,6 +68,7 @@ from .views import (Assign_fuelCreateView,
                     ThreadView,
                     CreateMessage,
                     Fuel_mgt_mBPOUpdateView,
+                    LoadVehicleType,
                     Motorbike_registerCreateView,
                     Fuel_mgt_mbikeCreateView
                     )
@@ -110,6 +111,7 @@ urlpatterns = [
     path('transport/v_handover/', FormWizardView.as_view(), name='vehicle-handover'),
 
     #new links for fuel_mgt requests management, to check corresponding templates
+    path('vstatus/<int:pk>/', views.validateStatus, name='ajax-check-status'),    
     path('transport/new_req/', views.Fuel_mgtCreateView.as_view(), name='new-request'),
     path('transport/request_details/<int:pk>/', Fuel_mgtDetailView.as_view(), name='fuel-details'),
     path('transport/fuelmgt_list/', Fuel_mgtListView.as_view(), name='fuel-mgt-list'),
@@ -172,6 +174,9 @@ urlpatterns = [
     path('transport/generator_create/', views.Generator_CreateView.as_view(), name='new-generator'),
     path('transport/generator_list/', views.Generator_ListView.as_view(), name='list-generators'),
 
+    #link for validating vehicle type and returning ajax respose
+    path('ajax/load-vehicle-type/', LoadVehicleType.as_view(), name='ajax_load_vehicle_type'),   
+    
     #link for new fuel mgtm forms 
     path('transport/fuel_create/', views.Fuel_mgt_mCreateView.as_view(), name='fuelm-create'),
     path('transport/fuelmgtm_list/', Fuel_mgt_mListView.as_view(), name='fuel-mgtm-list'),

@@ -42,7 +42,8 @@ from .models import (Vehicle_register,
                     Motor_bike_riders,
                     Motor_bike_assignment_register,
                     Fuel_mgt_mb,
-                    Motor_cycle_issues)
+                    Motor_cycle_issues, 
+                    Bulk_Fuel_Request)
 
 # Register your models here.
 admin.site.site_header = 'NCWSC TRANSPORT SYSTEM'
@@ -132,6 +133,7 @@ admin.site.register(Motor_bike_model)
 admin.site.register(Motor_bike_register)
 admin.site.register(Fuel_mgt_mb)
 admin.site.register(Motor_cycle_issues)
+admin.site.register(Bulk_Fuel_Request)
 
 
 

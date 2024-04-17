@@ -29,18 +29,52 @@
         <td>{{ object.total_price }}</td>
       </tr>
       <tr>
+          <td>site image:</td>
+          <td>
+              {% if object.site_image %}
+                  <img src="{{ object.site_image.url }}" alt="My Image">
+              {% else %}
+                  No site image available
+              {% endif %}
+          </td>
+      </tr>
+    <tr>
+      <td>Previous Worksheet:</td>
+      <td>
+          {% if object.previous_worksheet %}
+              <a href="{{ object.previous_worksheet.url }}" target="_blank">View Worksheet</a>
+          {% else %}
+              No previous worksheet available
+          {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>Current mileage:</td>
+      <td>{{ object.current_mileage }}</td>
+    </tr>
+    <tr>
+      <td>Engine Hours:</td>
+      <td>
+          {% if object.engine_hours %}
+		          {{ object.engine_hours }}
+          {% else %}
+              Engine hours are not available for this vehicle
+          {% endif %}
+      </td>
+    </tr>    
+    <tr>
         <td>Requested by:</td>
         <td>{{ object.requested_by }}</td>
-      </tr>
-      <tr>
-        <td>Date Requested:</td>
-        <td>{{ object.date_requested }}</td>
-      </tr>
-      <tr>
-        <td>Approval Status</td>
-        <td><span class="badge badge-info">Pending Approval to Fuel</span>
-            <i class="mdi mdi-alert-box"></i></td>
-      </tr>
+    </tr>
+    <tr>
+      <td>Date Requested:</td>
+      <td>{{ object.date_requested }}</td>
+    </tr>
+    <tr>
+      <td>Approval Status</td>
+      <td><span class="badge badge-info">Pending Approval to Fuel</span>
+          <i class="mdi mdi-alert-box"></i></td>
+    </tr>
      
     </tbody>
 </table>

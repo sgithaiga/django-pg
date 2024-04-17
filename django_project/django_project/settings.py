@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'reports.apps.ReportsConfig',
     'dashboard.apps.DashboardConfig',
     'vehiclemgt.apps.VehiclemgtConfig',
+    'compliance.apps.ComplianceConfig',
     'crispy_forms',
     'rest_framework',
     'django.contrib.admin',
@@ -180,3 +181,6 @@ BOOTSTRAP4 = {
 LOGIN_REDIRECT_URL = 'transport-home'
 LOGIN_URL = 'login'
 #for chained selce boxes
+
+# Set DATA_UPLOAD_MAX_MEMORY_SIZE to 10MB (10 * 1024 * 1024 bytes)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB

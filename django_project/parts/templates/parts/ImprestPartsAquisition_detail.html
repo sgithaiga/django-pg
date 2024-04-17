@@ -1,0 +1,67 @@
+{% extends "transport/base.html" %}
+{% block content %}
+<table class="table">
+  <thead>
+    <tr><h3>Imperest Part Purchases request details for reg. no {{ object.registration_no }}</h3>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Station:</td>
+      <td>{{ object.station }}</td>
+    </tr>
+    <tr>
+      <td>Registration number:</td>
+      <td>{{ object.registration_no }}</td>
+    </tr>
+    <tr>
+      <td>Part category:</td>
+      <td>{{ object.part_category }}</td>
+    </tr>
+    <tr>
+      <td>Part name:</td>
+      <td>{{ object.part_name }}</td>
+    </tr>      
+    <tr>
+      <td>Part cost:</td>
+      <td>{{ object.part_cost }}</td>
+    </tr>
+    <tr>
+      <td>Quantity:</td>
+      <td>{{ object.quantity }}</td>
+    </tr>
+    <tr>
+        <td>Total</td>
+        <td>{{ object.total }}</td>
+    </tr>
+    <tr>
+        <td>Download invoice</td>
+        <td><a href="{{ object.invoice.url }}" download>Download Invoice</a></td>
+    </tr>
+    <tr>
+      <td>Requested by:</td>
+      <td>{{ object.requested_by }}</td>
+    </tr>      
+    <tr>
+      <td>Date Requested:</td>
+      <td>{{ object.date_requested }}</td>
+    </tr>
+    <tr>
+        <td>Approved by</td>
+        <td>{{ object.approved_by}}</td>
+    </tr>
+    <tr>
+        <td>Date approved</td>
+        <td>{{ object.date_approved }}</td>
+    </tr>
+    <tr>
+      <td>Approval Status</td>
+      <td><span class="badge badge-info">Approved for purchase</span>
+          <i class="mdi mdi-alert-box"></i></td>
+    </tr>
+   
+  </tbody>
+</table>
+{% endblock content %}
+
+

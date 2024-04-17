@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consumption Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h3>Historic Consumption and Cost Analysis</h3>
+
+    <label for="monthSelect">Select Month:</label>
+    <select id="monthSelect"></select>
+
+    <canvas id="myChart"></canvas>
+
+    <script>
+        // Fetch the data from the server
+        fetch('/historic-consumption/')
+            .then(response => response.json())
+            .then(data => {
+                let months = Object.keys(data);
+
+                // Sort the months from oldest to newest
+                months.sort();
+
+                // Populate the select element with the months
+                let monthSelect = document.getElementById('monthSelect');
+                months.forEach(month => {
+                    let option = document.createElement('option');
+                    option.value = month;
+                    option.text = month;
+                    monthSelect.appendChild(option);
+                });
+
+                // Create the chart
+                let ctx = document.getElementById('myChart').getContext('2d');
+                let myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],  // Regions
+                        datasets: [{
+                            label: 'Diesel Quantity (ltrs)',
+                            data: [],  // Diesel quantities
+                            backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                            borderColor: 'rgba(0, 123, 255, 1)',
+                            borderWidth: 1
+                        }, {
+                            label: 'Petrol Quantity (ltrs)',
+                            data: [],  // Petrol quantities
+                            backgroundColor: 'rgba(220, 53, 69, 0.5)',
+                            borderColor: 'rgba(220, 53, 69, 1)',
+                            borderWidth: 1
+                        }, {
+                            label: 'Diesel Cost (ksh)',
+                            data: [],  // Diesel costs
+                            backgroundColor: 'rgba(0, 255, 0, 0.5)',
+                            borderColor: 'rgba(0, 255, 0, 1)',
+                            borderWidth: 1
+                        }, {
+                            label: 'Petrol Cost (ksh)',
+                            data: [],  // Petrol costs
+                            backgroundColor: 'rgba(255, 0, 0, 0.5)',
+                            borderColor: 'rgba(255, 0, 0, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                // Update the chart when the selected month changes
+                monthSelect.addEventListener('change', function() {
+                    let month = this.value;
+                    let monthData = data[month];
+
+                    myChart.data.labels = Object.keys(monthData);
+                    myChart.data.datasets[0].data = Object.values(monthData).map(regionData => regionData.Diesel.quantity);
+                    myChart.data.datasets[1].data = Object.values(monthData).map(regionData => regionData.Petrol.quantity);
+                    myChart.data.datasets[2].data = Object.values(monthData).map(regionData => regionData.Diesel.cost);
+                    myChart.data.datasets[3].data = Object.values(monthData).map(regionData => regionData.Petrol.cost);
+                    myChart.update();
+                });
+
+                // Trigger the change event to update the chart with the initial month
+                monthSelect.dispatchEvent(new Event('change'));
+            });
+    </script>
+</body>
+</html>

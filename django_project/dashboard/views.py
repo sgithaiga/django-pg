@@ -8,7 +8,7 @@ from django.views.generic import (ListView,
                                   TemplateView)
 
 
-from transport.models import Fuel_mgt
+from transport.models import Fuel_mgt, Vehicle_register
 
 
 def dashboard_with_pivot(request):
@@ -21,3 +21,10 @@ def pivot_data(request):
 
 class ChartView(TemplateView):
     template_name = "dashboard/dash-board.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_registrations'] = Vehicle_register.objects.count()
+        context['total_operational'] = Vehicle_register.objects.filter(operational_status='operational').count()
+        context['total_grounded'] = Vehicle_register.objects.filter(operational_status='grounded').count()
+        return context

@@ -143,13 +143,27 @@
                                 <li class="sidebar-item"><a href="{% url 'bikes-list' %}" class="sidebar-link"><i class="mdi mdi-format-list-bulleted-type"></i><span class="hide-menu">Motor Cycles List</span></a></li>
                                 <li class="sidebar-item"><a href="{% url 'list-riders' %}" class="sidebar-link"><i class="mdi mdi-human"></i><span class="hide-menu">Motor Cycle Riders List</span></a></li>
                             </ul>
+                        </li>
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-flash"></i><span class="hide-menu">Power Plants </span></a>
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item"><a href="{% url 'list-generators' %}" class="sidebar-link"><i class="mdi mdi-flash"></i><span class="hide-menu">Power Plants</span></a></li>
+                            </ul>
                         </li>                        
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fas fa-wrench"></i><span class="hide-menu">Motor Vehicles Parts </span></a>
                             <ul aria-expanded="false" class="collapse  first-level">
-                                <li class="sidebar-item"><a href="{% url 'parts:add_vehicle' %}" class="sidebar-link"><i class="fas fa-plus"></i><span class="hide-menu">Add new order item</span></a></li>
-                                <li class="sidebar-item"><a href="{% url 'parts:list_vehicles' %}" class="sidebar-link"><i class="fas fa-list-ol"></i><span class="hide-menu">List part orders </span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'parts:parts-request' %}" class="sidebar-link"><i class="fas fa-plus"></i><span class="hide-menu">Add new order item</span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'parts:list-parts' %}" class="sidebar-link"><i class="fas fa-list-ol"></i><span class="hide-menu">List part orders </span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'parts:list-tyre-issuance' %}" class="sidebar-link"><i class="mdi mdi-checkbox-multiple-blank-circle"></i><span class="hide-menu">Tire issuance list </span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'parts:list-imperest-requests' %}" class="sidebar-link"><i class="mdi mdi-wrench"></i><span class="hide-menu">Imperest parts purchases </span></a></li>
                             </ul>
-                        </li>                        <!--<li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"><i class="mdi mdi-garage"></i><span class="hide-menu">Garage</span></a></li>
+                        </li>                        
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-animation"></i><span class="hide-menu">Regulator compliance </span></a>
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item"><a href="{% url 'ntsa-compliance-list' %}" class="sidebar-link"><i class="mdi mdi-folder-multiple"></i><span class="hide-menu">NTSA Compliance</span></a></li>
+                                <li class="sidebar-item"><a href="{% url 'insurance-compliance-list' %}" class="sidebar-link"><i class="mdi mdi-folder-multiple"></i><span class="hide-menu">Insurance</span></a></li>
+                            </ul>
+                        </li>                        
+                        <!--<li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"><i class="mdi mdi-garage"></i><span class="hide-menu">Garage</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"><i class="mdi mdi-truck"></i><span class="hide-menu">Trucks and Plant machinery</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"><i class="mdi mdi-motorbike"></i><span class="hide-menu">Motor Bikes</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-table"></i><span class="hide-menu">Reports </span></a>

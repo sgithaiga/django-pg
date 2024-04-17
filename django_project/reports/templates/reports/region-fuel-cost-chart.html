@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fuel Cost Per Region</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="d-flex justify-content-center">
+        <div class="p-2 mx-auto" style="width: 800px;">
+            <canvas id="fuelChart" width="600" height="400"></canvas>        
+        </div>
+    </div>
+    <script>
+        // Fetch the data from the Django view
+        fetch('{% url "fuel_cost_per_region" %}')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.diesel[0]);
+                // Now, 'data' is already a JavaScript object, no need to parse it
+
+                // Prepare the data for the chart
+                const labels = data.diesel.map(item => item.region__station);
+                const dieselCosts = data.diesel.map(item => item.total_cost);
+                const petrolCosts = data.petrol.map(item => item.total_cost);
+
+                // Create the chart
+                new Chart(document.getElementById('fuelChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Diesel',
+                            data: dieselCosts,
+                            backgroundColor: 'rgba(0, 123, 255, 0.5)'
+                        }, {
+                            label: 'Petrol',
+                            data: petrolCosts,
+                            backgroundColor: 'rgba(220, 53, 69, 0.5)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Cost of Diesel and Petrol Per Region'
+                            }
+                        }
+                    },
+                });
+            });
+    </script>
+</body>
+</html>
+0

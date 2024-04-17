@@ -40,7 +40,11 @@
                   {% render_field field class="form-control is-valid" %}
                 {% endif %}
               {% else %}
-                {% render_field field class="form-control" %}
+                {% if field.name == 'vehicle_registration_date' %}
+                    {{ field|add_class:"form-control"|attr:"type:date" }}
+                {% else %}
+                    {% render_field field class="form-control" %}
+                {% endif %}
               {% endif %}
         
               {% if field.help_text %}

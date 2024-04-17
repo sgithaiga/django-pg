@@ -1,0 +1,116 @@
+{% extends "transport/base.html" %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h2>Imperest parts approval form</h2>
+    <hr>
+    <table class="table">
+        <thead>
+          <tr>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Station:</td>
+            <td>{{ object.station }}</td>
+          </tr>
+          <tr>
+            <td>Registration number:</td>
+            <td>{{ object.registration_no }}</td>
+          </tr>
+          <tr>
+            <td>Part category:</td>
+            <td>{{ object.part_category }}</td>
+          </tr>
+          <tr>
+            <td>Part name:</td>
+            <td>{{ object.part_name }}</td>
+          </tr>      
+    
+          <tr>
+            <td>Part cost:</td>
+            <td>{{ object.part_cost }}</td>
+          </tr>
+          <tr>
+            <td>Quantity:</td>
+            <td>{{ object.quantity }}</td>
+          </tr>
+          <tr>
+            <td>Requested by:</td>
+            <td>{{ object.requested_by }}</td>
+          </tr>      
+          <tr>
+            <td>Date Requested:</td>
+            <td>{{ object.date_requested }}</td>
+          </tr>
+          <tr>
+            <td>Download invoice</td>
+            <td><a href="{{ object.invoice.url }}" download>Download Invoice</a></td>
+        </tr>
+              <tr>
+            <td>Approval Status</td>
+            <td><span class="badge badge-info">Pending Approval to procure</span>
+                <i class="mdi mdi-alert-box"></i></td>
+          </tr>
+         
+        </tbody>
+    </table>
+    
+
+
+
+
+<div class="row">
+    <div class="col-md-10">
+
+
+        <form method="post" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+        
+          {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+          {% endfor %}
+        
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+              {% for error in form.non_field_errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        
+          {% for field in form.visible_fields %}
+            <div class="form-group">
+              {{ field.label_tag }}
+        
+              {% if form.is_bound %}
+                {% if field.errors %}
+                  {% render_field field class="form-control is-invalid" %}
+                  {% for error in field.errors %}
+                    <div class="invalid-feedback">
+                      {{ error }}
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  {% render_field field class="form-control is-valid" %}
+                {% endif %}
+              {% else %}
+                {% if field.name == 'vehicle_registration_date' %}
+                    {{ field|add_class:"form-control"|attr:"type:date" }}
+                {% else %}
+                    {% render_field field class="form-control" %}
+                {% endif %}
+              {% endif %}
+        
+              {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+              {% endif %}
+            </div>
+          {% endfor %}
+        
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}

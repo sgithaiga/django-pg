@@ -8,23 +8,29 @@
         <hr>
     <div class="row">
         <div class="col-md-10">
-    
-    
-            <form method="post" id="fuelForm" data-prices-url="{% url 'ajax-load-prices' %}" data-vehicle-url="{% url 'ajax-load-vehicles' %}" data-codes-url="{% url 'ajax-load-codes' %}" data-vlocations-url="{% url 'ajax-load-vendor-locations' %}" data-fuel-types-url="{% url 'load-vendor-fuel-types' %}" data-vendor-prices-url="{% url 'ajax-load-vendor-prices' %}" data-vendor-discounts-url="{% url 'ajax-load-discounts' %}" novalidate>
+            <form method="post" id="fuelForm" enctype="multipart/form-data" data-prices-url="{% url 'ajax-load-prices' %}" data-vehicle-url="{% url 'ajax-load-vehicles' %}" data-codes-url="{% url 'ajax-load-codes' %}" data-vlocations-url="{% url 'ajax-load-vendor-locations' %}" data-fuel-types-url="{% url 'load-vendor-fuel-types' %}" data-vendor-prices-url="{% url 'ajax-load-vendor-prices' %}" data-vendor-discounts-url="{% url 'ajax-load-discounts' %}"  novalidate>
               {% csrf_token %}
             
               {% for hidden_field in form.hidden_fields %}
                 {{ hidden_field }}
               {% endfor %}
-            
+
+              <!-- Display validation errors -->
+              {% if form.errors %}
+                  <div class="alert alert-danger">
+                      {% for field_errors in form.errors %}
+                          {{ field_errors }}
+                      {% endfor %}
+                  </div>
+              {% endif %}
               {% if form.non_field_errors %}
-                <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger" id="alert" role="alert">
                   {% for error in form.non_field_errors %}
                     {{ error }}
                   {% endfor %}
                 </div>
               {% endif %}
-            
+              <div class="alert alert-danger" id="alert1" role="alert" style="display: none;"></div>
               {% for field in form.visible_fields %}
                 <div class="form-group">
                   {{ field.label_tag }}
@@ -52,11 +58,14 @@
             
               <button type="submit" class="btn btn-primary">Submit</button>
             </form>
-        </div>
+
+
+          </div>
     </div>
        
         <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
-        <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>        <script>
+
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>        <script>
 
 
           $("#id_region").change(function () {
@@ -160,7 +169,42 @@
       
           });
           
-      </script>
+</script>
+
+<!-- <script>
+$(document).ready(function() {
+    // Initially hide the fields for bulk fuel
+    $('#id_bulk_fuel_quantity').parent().hide();
+    $('#id_previous_bulk_fuel_quantity').parent().hide();
+
+    // Show or hide fields when the 'category' field changes
+    $('#id_category').change(function() {
+        var category = $(this).val();  // get the selected category
+        if (category == 'BULK_FUEL') {
+            // hide the fields for motor vehicle and show the fields for bulk fuel
+            $('#id_registration_no').val('').parent().hide();
+            $('#id_driver_name').val('').parent().hide();
+            $('#id_current_mileage').parent().hide();
+            $('#id_site_image').parent().hide();
+            $('#id_previous_worksheet').parent().hide();
+            $('#id_engine_hours').parent().hide();
+            $('#id_bulk_fuel_quantity').parent().show();
+            $('#id_previous_bulk_fuel_quantity').parent().show();
+        } else {
+            // show the fields for motor vehicle and hide the fields for bulk fuel
+            $('#id_registration_no').parent().show();
+            $('#id_driver_name').parent().show();
+            $('#id_current_mileage').parent().show();
+            $('#id_site_image').parent().show();
+            $('#id_previous_worksheet').parent().show();
+            $('#id_engine_hours').parent().show();
+            $('#id_bulk_fuel_quantity').parent().hide();
+            $('#id_previous_bulk_fuel_quantity').parent().hide();
+        }
+    });
+});
+
+</script> -->
 
 <script>
   $('select[name="price_per_liter"]').change(function(){
@@ -169,30 +213,9 @@
   var val3 = val1 * val2; // multiply both value
   $("#id_total").val(val3);
   });
-  </script>
-  <!--<script type="text/javascript">
+</script>
 
-        //function to calculate total
-
-    function Totalprice() {
-      fuelprice = Number($('#id_price_per_liter').val());
-      amount = Number($('#id_fuel_amount_requested').val());
-          if(fuelprice && amount && !isNaN(fuelprice) && !isNaN(amount)){
-            $('#id_total_price').val(fuelprice * amount);
-          }
-          else {
-            $('#id_total').val(0);
-          }
-    }
-  </script>
-
-              if('#id_total_price' != fuelprice * amount ){
-            alert ('error')
-
-          }
-  -->
-
-  <script>
+<script>
 
     function reMultiply() {
       fuelprice = Number($('#id_fprice').val());
@@ -206,8 +229,115 @@
           }
 
     }  
+</script>
+
+<script>
+let baseUrl = "{% url 'ajax-check-status' pk=123 %}".split('123')[0];
+
+let hasValidationError = false;
 
 
+$('#id_registration_no').on('change', function() {
+    let pk = this.value; // The selected value
+    if (pk) { // Check if pk is not empty
+        $.ajax({
+            url: "{% url 'ajax-check-status' pk=123 %}".split('123')[0].concat(pk),
+            type: 'GET',
+            success: function(data) {
+                console.log(data);
+                hasValidationError = false; // No validation error
+                $('#alert1').hide(); // Hide the alert div
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                // Parse the JSON error message from the server
+                let errorResponse = JSON.parse(jqXHR.responseText);
+                let errorMessage;
+
+                // Check if the error field is an array
+                if (Array.isArray(errorResponse.error)) {
+                    errorMessage = errorResponse.error[0]; // Use the first element of the array
+                } else {
+                    errorMessage = errorResponse.error; // Use the error field directly
+                }
+
+                // Remove square brackets and quotes from the error message
+                errorMessage = errorMessage.replace(/[\[\]']+/g,'');
+
+                // Create a formatted error message
+                let formattedError = '<div class="alert alert-danger" role="alert">' +
+                                    '<h6 class="alert-heading">Vehicle Grounded</h6>' +
+                                    '<p>' + errorMessage + '</p>' +
+                                    '</div>';
+
+                // Display the formatted error message in the alert div
+                $('#alert1').html(formattedError).show();
+                hasValidationError = true; // There was a validation error
+            }
+
+        });
+    }
+});
+
+// Prevent form submission if grounded vehicle is selected
+// Listen for the form submit event
+$('#fuelForm').on('submit', function(event) {
+    // If hasValidationError is true, prevent form submission
+    if (hasValidationError) {
+        event.preventDefault();
+    }
+});
+
+
+</script>
+
+<script>
+$('fuelForm').on('submit', function(e) { 
+    e.preventDefault(); // Prevent the form from submitting
+
+    $.ajax({
+        url: "{% url 'new-request' %}", // replace with your URL
+        type: 'POST', // or 'GET', depending on your needs
+        data: $(this).serialize(), // serialize the form data
+        success: function(data) {
+            // handle success case
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // Display the error message in a HTML alert
+            alert('Error: ' + errorThrown);
+        }
+    });
+});
   
-  </script>
-  {% endblock content %}
+</script>
+<script>
+    $('#id_registration_no').change(function () {
+        var url = "{% url 'ajax_load_vehicle_type' %}";  // get the url of the `ajax_load_vehicle_type` view
+        var registrationNo = $(this).val();  // get the selected registration_no ID
+
+        $.ajax({                       // initialize an AJAX request
+            url: url,                    // set the url of the request (= '/vehicle/ajax_load_vehicle_type/')
+            data: {
+                'registration_no': registrationNo       // add the registration_no parameter in the GET request
+            },
+            success: function (data) {   // `data` is the return of the `ajax_load_vehicle_type` view function
+                var vehicleType = data['vehicle_type'];
+                if (vehicleType == 'Tanker' || vehicleType == 'Exhauster' || vehicleType == 'Excavator' || vehicleType == 'Flushing Unit') {
+                    // show the fields
+                    $('#id_site_image').show();
+                    $('#id_previous_worksheet').show();
+                    $('#id_engine_hours').show();
+                } else {
+                    // hide the fields
+                    $('#id_site_image').hide();
+                    $('#id_previous_worksheet').hide();
+                    $('#id_engine_hours').hide();
+                }
+            }
+        });
+    });
+
+
+</script>
+
+
+{% endblock content %}

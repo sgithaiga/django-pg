@@ -144,8 +144,8 @@
                         </li>                        
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fas fa-wrench"></i><span class="hide-menu">Motor Vehicles Parts </span></a>
                           <ul aria-expanded="false" class="collapse  first-level">
-                              <li class="sidebar-item"><a href="{% url 'parts:add_vehicle' %}" class="sidebar-link"><i class="fas fa-plus"></i><span class="hide-menu">Add new order item</span></a></li>
-                              <li class="sidebar-item"><a href="{% url 'parts:list_vehicles' %}" class="sidebar-link"><i class="fas fa-list-ol"></i><span class="hide-menu">List part orders </span></a></li>
+                              <li class="sidebar-item"><a href="{% url 'parts:parts-request' %}" class="sidebar-link"><i class="fas fa-plus"></i><span class="hide-menu">Add new order item</span></a></li>
+                              <li class="sidebar-item"><a href="{% url 'parts:list-parts' %}" class="sidebar-link"><i class="fas fa-list-ol"></i><span class="hide-menu">List part orders </span></a></li>
                           </ul>
                       </li>                        <!--<li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"><i class="mdi mdi-garage"></i><span class="hide-menu">Garage</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"><i class="mdi mdi-truck"></i><span class="hide-menu">Trucks and Plant machinery</span></a></li>
@@ -179,7 +179,7 @@
                 <div class="row">
                     <div class="col-12 d-flex no-block align-items-center">
 
-                      <a href="{% url 'parts:add_vehicle' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true"><i class="mdi mdi-plus-circle"></i>Add new</a>
+                      <a href="{% url 'parts:parts-request' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true"><i class="mdi mdi-plus-circle"></i>Add new</a>
                         <div class="ml-auto text-right">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
@@ -240,30 +240,29 @@
                                                 {% for part in parts_list %}
                                                 <tr>
                                                     <td>GR-{{ part.id }}</td>
-                                                    <td><a class="text-reset" href="{{ part.get_absolute_url }}">{{ part.Vehicle }}</a></td>
-                                                    <td>{{ part.title }}</td>
-                                                    {% if part.delivered == 1%}
+                                                    <td><a class="text-reset" href="{% url 'parts:part-request-update' pk=part.id%}">{{ part.registration_number }}</a></td>
+                                                    <td>{{ part.part_name }}</td>
+                                                    {% if part.delivered == 'Yes' %}
                                                     <td><span class="badge badge-primary" data-toggle="tooltip" data-placement="right" title="Part delivered">Delivered</span></td>
                                                     {% else %}
                                                     <td><span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="Part not delivered">Not Delivered</span></td>
                                                     {% endif %} 
-                                                    {% if part.fitted == 1%} 
+                                                    {% if part.fitted == 'Fitted' %} 
                                                     <td><span class="badge badge-primary" data-toggle="tooltip" data-placement="right" title="Part fitted">Fitted</span></td>
                                                     {% else %}
-                                                    <td><span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="Part fitted">Not Fitted</span></td>
+                                                    <td><span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="Part not fitted">Not Fitted</span></td>
                                                     {% endif %}
                                                     <td>{{ part.quantity }}</td>
-                                                    {% if part.delivered == 1 and part.fitted == 1 %}
+                                                    {% if part.delivered == 'Yes' and part.fitted == 'Fitted' %}
                                                     <td>{{ part.date_fitted }}</td>
                                                     {% else %}
                                                     <td> Installation not complete</td>
                                                     {% endif %}
-
-                                                </tr>
-                                            
-                                                {% endfor %}
-                                              </tbody>
-                                        </table>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                                                                    
+                                            </table>
                                           
                                           
                                               {% if is_paginated %}

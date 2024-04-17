@@ -33,7 +33,8 @@ urlpatterns = [
     path('core/', include('core.urls', namespace='core')),
     path('dashboard/', include('dashboard.urls')),
     path('parts/', include('parts.urls')),
+    path('compliance/', include('compliance.urls')),
     ]
-
+  
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

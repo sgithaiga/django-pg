@@ -1,9 +1,13 @@
 from urllib import request
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.http import Http404
+from django.core.exceptions import ValidationError
 from django.contrib.messages.views import SuccessMessageMixin
 import json
 from django.db.models import Count, Q
+from django.db import transaction
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import get_template
 from xhtml2pdf import pisa
@@ -78,12 +82,14 @@ from transport.forms import (Assign_fuelForm,
                             PersonForm,
                             Fuel_mgt_xnForm,
                             Fuel_mgt_xn_issueForm,
+                            BulkFuelForm,
                             DriverEditForm,
                             ThreadForm,
                             MessageForm,
                             BPOapproval_Form,
                             Motorbike_registerForm,
-                            Fuel_mgt_mbForm,)
+                            Fuel_mgt_mbForm,
+                            GeneratorForm)
 
 from .filters import RequestFilter
 
@@ -713,7 +719,8 @@ class Generator_CreateView(LoginRequiredMixin, CreateView):
 
     model = Generator
     template_name = 'transport/Generator_register_form.html' #<app>/<model>_<viewtype>.html
-    fields = ['serial_number', 'make', 'model', 'location', 'output']
+    # fields = ['serial_number', 'make', 'model', 'location', 'output']
+    form_class = GeneratorForm
 
 
     def form_valid(self,form):
@@ -726,20 +733,71 @@ class Generator_ListView(LoginRequiredMixin, ListView):
     model = Generator
     template_name = 'transport/Generator_list.html' #<app>/<model>_<viewtype>.html
     context_object_name = 'posts'
+
+###############validation views for Fuel_mgt_xnForm
+def validateStatus(request, pk):
+    # Vehicle_register = get_object_or_404(Vehicle_register, pk=pk)
+    if request.method == "GET":
+        try:
+            queryset = Vehicle_register.objects.filter(pk=pk, operational_status='grounded').values()
+
+            if queryset:
+                raise ValidationError(f'This vehicle is listed as grounded and cannot be fueled. Kindly review your selection or contact the fleet administrator for assistance')    
+            data = list(queryset.values())
+            return JsonResponse(data, safe=False)
+        except ValidationError as e:
+            error_message = str(e)
+            return JsonResponse({'error': error_message}, status=400)
+
+class LoadVehicleType(View):
+    def get(self, request):
+        vehicle_id = request.GET.get('registration_no')
+        try:
+            vehicle = Vehicle_register.objects.get(id=vehicle_id)
+            vehicle_type = vehicle.type
+            return JsonResponse({'vehicle_type': vehicle_type})
+        except Vehicle_register.DoesNotExist:
+            return JsonResponse({'error': 'Vehicle with this ID does not exist'}, status=404)
+
+
 ############################# new form xn views
-class Fuel_mgt_mCreateView(LoginRequiredMixin, UserAccessMixin, CreateView):
-    
-    permission_required = 'transport.add_fuel_mgt'
 
-    model = Fuel_mgt_xn
-    form_class = Fuel_mgt_xnForm
+
+class Fuel_mgt_mCreateView(LoginRequiredMixin,  View):
+    # permission_required = 'transport.add_fuel_mgt'UserAccessMixin,
     template_name = 'transport/fuel_mgt_m_form.html'
-    #success_message = 'Request successfully saved!'    
 
-    def form_valid(self, form):
-        form.instance.requested_by = self.request.user
-        messages.success(self.request, 'Fuel request created successfully.')
-        return super().form_valid(form)
+    def get(self, request, *args, **kwargs):
+        form = Fuel_mgt_xnForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = Fuel_mgt_xnForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                # Get the vehicle for which the fuel request is being made
+                vehicle = get_object_or_404(Vehicle_register, registration_no=form.instance.registration_no)
+
+                # Get the last fuel request for this vehicle
+                last_fuel_request = Fuel_mgt_xn.objects.filter(registration_no=vehicle).order_by('-date_requested').first()
+
+                if last_fuel_request:
+                    # Set the previous mileage and liters served to the current mileage and liters served of the last fuel request
+                    form.instance.previous_mileage = last_fuel_request.current_mileage
+                    form.instance.previous_liters_served = last_fuel_request.liters_served
+
+                form.instance.requested_by = self.request.user
+                form.save()
+                messages.success(self.request, 'Fuel request created successfully.')
+                return redirect('fuel-mgtm-list')  # replace 'success_url' with the actual success url
+            except Http404:
+                form.add_error('registration_no', 'Vehicle with this registration number does not exist.')
+            except ValidationError as e:
+                # Add the error to the form's errors
+                form.add_error(None, e)   
+        return render(request, self.template_name, {'form': form})
+
+
 
 class Fuel_mgt_mListView(LoginRequiredMixin, ListView):
 

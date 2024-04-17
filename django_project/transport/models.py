@@ -175,6 +175,8 @@ class Vehicle_register (models.Model):
     DOUBLE_CAB = 'Double Cab'
     TIPPER = 'Tipper'
     TANKER = 'Tanker'
+    FLUSHING_UNIT = 'Flushing unit'
+    EXHAUSTER = 'Exhauster'
     LOW_LOADER = 'Low Loader'
     SALOON = 'Saloon'
     EXCAVATOR = 'Excavator'
@@ -301,7 +303,12 @@ class Vehicle_register (models.Model):
         (PRIVATE, ('Private')),
     ]
 
-
+    PLANTS_MACHINERY = [
+        (TANKER, ('Tanker')),
+        (EXCAVATOR, ('Excavator')),        
+        (EXHAUSTER, ('Exhauster')),
+        (FLUSHING_UNIT, ('Flushing Unit')),
+    ] 
     registration_no = models.CharField(max_length=100, unique=True)
     region = models.ForeignKey(station, on_delete=models.CASCADE, null=True)
     make = models.ForeignKey(Make, on_delete=models.CASCADE, null=True)
@@ -341,7 +348,7 @@ class Vehicle_register (models.Model):
     axles = models.IntegerField(blank=True, null=True)
     load_capacity = models.IntegerField(blank=True, null=True)
     log_book_number = models.CharField(max_length=100, null=True)
-    type =  models.CharField(max_length=100, null=True)
+    type =  models.CharField(max_length=100, choices=PLANTS_MACHINERY, null=True)
     fuel_type = models.ForeignKey(Fuel_name, on_delete=models.CASCADE, null=True )
 
 
@@ -992,7 +999,7 @@ class Generator (models.Model):
         (KARIOBANGI_TREATMENT_WORKS, ('Kariobangi Treatment Works')),
     ]
 
-    serial_number = models.CharField(max_length=200)
+    serial_number = models.CharField(max_length=200, unique=True)
     make = models.CharField(max_length=200)
     model = models.CharField(max_length=200)
     location = models.CharField(
@@ -1002,7 +1009,7 @@ class Generator (models.Model):
     )
     output = models.CharField(max_length=200)
     entered_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
-    size = models.CharField(max_length=200, null=True, blank=True)
+    fuel_capacity = models.CharField(max_length=200, null=True, blank=True)
      
     def __str__(self):
         return self.serial_number
@@ -1086,18 +1093,21 @@ class Fuel_mgt_xn (models.Model):
     NEW="NEW" #new
     HR_APPROVED='HR-APPROVED' #HR-approved
     BPO_APPROVED='BPO-APPROVED' #BPo-approved
-    FUELED='FUELED'                        #fueled
+    FUELED='FUELED'#fueled
+    BULK_FUEL = 'Bulk fuel'
+    MOTOR_VEHICLE = 'Motor vehicle'
+    
     STATUS_CHOICES = [
         (NEW, 'NEW'),
         (HR_APPROVED, 'HR-APPROVED'),
         (BPO_APPROVED, 'BPO-APPROVED'),
-        (FUELED, 'FUELED'),
-       
-
+        (FUELED, 'FUELED'),    
     ]
 
-
-
+    CATEGORY_CHOICES = [
+        ('BULK_FUEL', 'Bulk Fuel'),
+        ('MOTOR_VEHICLE', 'Motor Vehicle'),
+    ]
     request_reference = models.UUIDField(default=uuid.uuid4)
     region = models.ForeignKey(station, on_delete=models.CASCADE, null = True)
     registration_no = models.ForeignKey(Vehicle_register, on_delete=models.CASCADE, null = True, related_name='+')
@@ -1124,7 +1134,7 @@ class Fuel_mgt_xn (models.Model):
     amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)    
     previous_mileage = models.CharField(max_length=100, null=True, blank=True)
     current_mileage = models.CharField(max_length=100, null=True, blank=True)
-    distance_covered = models.CharField(max_length=100, null=True)
+    distance_covered = models.IntegerField(null=True, blank=True)
     attended_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+', null=True)
     date_fueled = models.DateTimeField(default=timezone.now)
     region_code = models.ForeignKey(UserUnit, on_delete=models.CASCADE, related_name='+', null=True)
@@ -1139,9 +1149,15 @@ class Fuel_mgt_xn (models.Model):
     date_BPO_approved = models.DateTimeField(auto_now=True, null=True)
     fuel_Img = models.ImageField(upload_to='images/', null=True, blank=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES,null=True,blank=True,default= NEW)
+    fuel_consumed = models.IntegerField(null=True, blank=True)
+    average_consumption = models.FloatField(null=True, blank=True)
+    site_image = models.ImageField(upload_to='images/', null=True, blank=True)  # renamed field
+    previous_worksheet = models.FileField(upload_to='documents/', null=True, blank=True)
+    engine_hours = models.CharField(max_length=100, null=True, blank=True)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, null=True)###remove this field in prod
+    bulk_fuel_quantity = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True) ###remove this filed in prod
+    previous_bulk_fuel_quantity = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)####remove this field in prod
 
-    def __str__(self):
-        return self.registration_no.registration_no
 
     def get_fuel_issued_price(self):
 
@@ -1163,13 +1179,32 @@ class Fuel_mgt_xn (models.Model):
             d_price = '0'
 
         return d_price
-
-
+    
+    def calculate_average_consumption(self):
+        if self.distance_covered and self.previous_liters_served:
+            self.average_consumption = self.distance_covered / float(self.previous_liters_served)
+        else:
+            self.average_consumption = None
+            
     def get_absolute_url(self):
         # returns us to the list view. can also set this to app-home
         return reverse('fuel-mgtm-list')
     
+    def save(self, *args, **kwargs):
+        self.calculate_average_consumption()
+        if self.previous_mileage and self.current_mileage:
+            self.distance_covered = int(self.current_mileage) - int(self.previous_mileage)
 
+        if self.previous_liters_served and self.liters_served:
+            self.fuel_consumed = int(self.liters_served) - int(self.previous_liters_served)
+
+        # if self.distance_covered and self.fuel_consumed:
+        #     self.average_consumption = self.distance_covered / self.fuel_consumed
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.registration_no.registration_no
 
 class Parts_stock (models.Model):
     name = models.CharField(max_length=100, null=True)
@@ -1267,7 +1302,8 @@ class Garage (models.Model):
     approve_works = models.BooleanField(default=False)
     check_report = models.BooleanField(default=False)
     parts_required = models.TextField(blank = True, null=True)
-
+    parts_installed = models.BooleanField(default=False)
+    vehicle_released = models.BooleanField(default=False)
     def __str__(self):
         return self.Vehicle_issue_topic
 
@@ -1487,3 +1523,64 @@ class Motor_cycle_issues (models.Model):
     # def get_absolute_url(self):
     #     # returns  to the vehicle list 
     #     return reverse('mb-issue-list')
+
+class Bulk_Fuel_Request(models.Model):
+    request_reference = models.UUIDField(default=uuid.uuid4)
+    region = models.ForeignKey(station, on_delete=models.CASCADE)
+    registration_no = models.ForeignKey(Vehicle_register, on_delete=models.CASCADE, related_name='+')
+    driver_name = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='+')
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    vendor_location =  models.ForeignKey(Vendor_station, on_delete=models.CASCADE, related_name='+')
+    fuel_type_requested = models.ForeignKey(Vendor_fuel_types, on_delete=models.CASCADE, related_name = 'bulkfueltype')
+    fuel_amount_requested = models.DecimalField(max_digits=8, decimal_places=2)
+    price_per_liter = models.ForeignKey(Vendor_price, on_delete=models.CASCADE, related_name = 'bulkfuelprice')
+    current_plant_hours = models.CharField(max_length=100)
+    requested_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+', null=True)
+    date_requested = models.DateTimeField(auto_now_add=True)
+    approved = models.BooleanField(default=False)
+    approved_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+', null=True)
+    assign_request =  models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    BPO_approval= models.BooleanField(default=False)
+    approved_by_BPO = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    date_BPO_approved = models.DateTimeField(auto_now=True, null=True)
+    date_approved = models.DateTimeField(auto_now=True, null=True)
+    closed_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
+    fuel_issue_complete = models.BooleanField(default=False)
+    date_closed = models.DateTimeField(default=timezone.now)
+    declined = models.BooleanField(default=False)
+    reason = models.TextField(blank = True, null=True)
+    fuel_station_name = models.ForeignKey(Fuel_station, on_delete=models.CASCADE, related_name='+')
+    previous_liters_served = models.CharField(max_length=100, null=True) 
+    liters_served = models.IntegerField(null=True, blank=True)
+    amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)    
+    attended_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+', null=True)
+    date_fueled = models.DateTimeField(default=timezone.now)
+    region_code = models.ForeignKey(UserUnit, on_delete=models.CASCADE, related_name='+', null=True)
+    total_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    fprice =  models.CharField(max_length=100, null=True)
+    discount = models.ForeignKey(Vendor_price, on_delete=models.CASCADE, related_name = 'bulkdiscountprice', null = True) 
+
+
+    def get_fuel_issued_price(self):
+
+        if self.liters_served is not None:    
+        
+            #create variable tprice to store value and return true if condition is met
+            #return 0 as a safe fall back if false
+            tprice = self.liters_served * self.price_per_liter.fuel_price
+
+            return tprice
+        return 0
+
+    def get_discount_total(self):
+        
+        #run the equation in a try block to make sure you do not return nonetype error
+        try:
+           d_price = (self.price_per_liter.fuel_price - self.discount.discount_price) * self.liters_served
+        except:
+            d_price = '0'
+
+        return d_price
+    
+    def __str__(self):
+        return self.region

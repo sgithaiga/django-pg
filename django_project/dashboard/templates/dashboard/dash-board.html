@@ -1,53 +1,29 @@
 {% extends "transport/base.html" %}
+{% load widget_tweaks %}
+
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{ form.media }}
 
 {% block content %}
 <div class="container-fluid">
     <!-- ============================================================== -->
     <!-- Start Page Content -->
     <!-- ============================================================== -->
-    <!-- Chart-1 -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Real Time Chart</h5>
-                     <div id="real-time" style="height:400px;"></div>
-                    <p>Time between updates:
-                        <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ENd chart-1 -->
-    <!-- Chart-2 -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Turning-series chart</h5>
-                    <div id="placeholder" style="height: 400px;"></div>
-                    <p id="choices" class="m-t-20"></p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Chart-2 -->
+
     <!-- Cards -->
     <div class="row">
         <div class="col-md-3">
             <div class="card m-t-0">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="peity_line_neutral left text-center m-t-10"><span><span style="display: none;">10,15,8,14,13,10,10</span>
-                            <canvas width="50" height="24"></canvas>
-                            </span>
-                            <h6>10%</h6>
-                        </div>
+                    <div class="col-md-6 border-left text-center p-t-10">
+                        <h3 class="mb-0 font-weight-bold">{{ total_operational }}</h3>
+                        <span class="text-muted">Operational vehicles</span>
                     </div>
                     <div class="col-md-6 border-left text-center p-t-10">
-                        <h3 class="mb-0 font-weight-bold">150</h3>
-                        <span class="text-muted">New Users</span>
+                        <h3 class="mb-0 font-weight-bold">{{ total_registrations }}</h3>
+                        <span class="text-muted">Total vehicles</span>
                     </div>
                 </div>
             </div>
@@ -55,15 +31,9 @@
         <div class="col-md-3">
             <div class="card m-t-0">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="peity_bar_bad left text-center m-t-10"><span><span style="display: none;">3,5,6,16,8,10,6</span>
-                            <canvas width="50" height="24"></canvas>
-                            </span>
-                            <h6>-40%</h6></div>
-                    </div>
                     <div class="col-md-6 border-left text-center p-t-10">
-                        <h3 class="mb-0 font-weight-bold">4560</h3>
-                        <span class="text-muted">Orders</span>
+                        <h3 class="mb-0 font-weight-bold">{{ total_grounded }}</h3>
+                        <span class="text-muted">Grounded vehicles</span>
                     </div>
                 </div>
             </div>
@@ -102,20 +72,84 @@
         </div>
     </div>
     <!-- End cards -->
-    <!-- Chart-3 -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Bar Chart</h5>
-                    <div class="flot-chart">
-                        <div class="flot-chart-content" id="flot-line-chart"></div>
+      <!-- Bootstrap Nav tabs -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="chart1-tab" data-toggle="tab" href="#vehicledata" role="tab" aria-controls="chart1" aria-selected="true"><h4>Vehicle data</h4></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="chart2-tab" data-toggle="tab" href="#regiondata" role="tab" aria-controls="chart2" aria-selected="false"><h4>Region data</h4></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="chart3-tab" data-toggle="tab" href="#historicanalysis" role="tab" aria-controls="chart2" aria-selected="false"><h4>Historic analysis</h4></a>
+        </li>    
+    </ul>
+
+    
+    <!-- Tab panes -->
+    <!-- Invidudual vehicle fuel data chart -->
+    <div class="tab-content">
+        <div class="tab-pane active" id="vehicledata" role="tabpanel" aria-labelledby="chart1-tab">
+            <!-- Chart- -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                             <h4>Select vehicle to view fuel data</h4>
+                             <select id="registration_no" style="width: 40%;"></select>
+        
+                              <canvas id="myChart" width="700" height="400"></canvas>        
+                            
+                        </div>
                     </div>
                 </div>
             </div>
+            <!-- ENd chart-1 -->
         </div>
+        
+
+        <!-- Regional monthly fuel data chart-->
+        <div class="tab-pane" id="regiondata" role="tabpanel" aria-labelledby="chart2-tab">
+            <!-- Chart-2 -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Region fuel analysis</h5>
+                            <h4>Select month to view consumption</h4>
+                            <input type="month" id="month" name="month">
+                            <button id="submit">Submit</button>
+                            <canvas id="myRegionChart" width="600" height="400"></canvas>        
+                
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Chart-2 -->
+        </div>
+        
+
+        <!-- Historic regional monthly fuel data chart -->
+        <div class="tab-pane" id="historicanalysis" role="tabpanel" aria-labelledby="chart2-tab">
+            <!-- Chart-3 -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Historic consumption</h5>
+                                <h3>Historic Consumption and Cost Analysis</h3>
+                                <label for="monthSelect">Select Month:</label>
+                                <select id="monthSelect"></select>                
+                                <canvas id="historicAnalysisChart"width="700" height="400"></canvas>                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End chart-3 -->        
+        </div>        
+        <!-- Add more tab panes as needed -->
     </div>
-    <!-- End chart-3 -->
+
     <!-- Charts -->
     <div class="row">
         <div class="col-md-6">
@@ -147,6 +181,214 @@
     <!-- End Right sidebar -->
     <!-- ============================================================== -->
 </div>
+
+
+<!-- Individual vehicle fuel data -->
+<script>
+    var myChart;  // Declare the chart variable outside the AJAX call
+
+    $(document).ready(function() {
+        $.ajax({
+            url: "{% url 'registration-no' %}",
+            method: 'GET',
+            success: function(data) {
+                var select = $('#registration_no');
+                data.forEach(function(item) {
+                    select.append($('<option>', {
+                        value: item,
+                        text: item
+                    }));
+                });
+            }
+        });
+
+        $('#registration_no').change(function() {
+            var registration_no = $(this).val();
+            $.ajax({
+                url: "{% url 'chart-data' %}",
+                method: 'GET',
+                data: { 'registration_no': registration_no },
+                success: function(data) {
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    if (myChart) {  // If a chart instance exists
+                        myChart.destroy();  // Destroy the existing chart
+                    }
+                    myChart = new Chart(ctx, {  // Create a new chart and assign it to the chart variable
+                        type: 'line', // Change the chart type to 'line'
+                        data: {
+                            labels: data.map(function(item) { return item.date; }),
+                            datasets: [{
+                                label: 'Average Consumption',
+                                data: data.map(function(item) { return item.average_consumption; }),
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                fill: 'origin' // Add the 'fill' option
+                            },
+                            {
+                                label: 'Distance Travelled',
+                                data: data.map(function(item) { return item.distance_covered; }), // Assuming 'distance_covered' is available in your data
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)', // Change the color for this dataset
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1,
+                                fill: 'origin'
+                            },
+                            {
+                                label: 'Fuel Issued',
+                                data: data.map(function(item) { return item.fuel_issued; }), // Assuming 'fuel_issued' is available in your data
+                                backgroundColor: 'rgba(153, 102, 255, 0.2)', // Change the color for this dataset
+                                borderColor: 'rgba(153, 102, 255, 1)',
+                                borderWidth: 1,
+                                fill: 'origin'
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<!-- Monthly regional fuel data -->
+<script>
+    $(document).ready(function() {
+        $('#submit').click(function() {
+            var monthYear = $('#month').val().split('-');
+            $.ajax({
+                url: "/monthly-fuel-issued-per-region/",
+                method: 'GET',
+                data: { 'month': monthYear[1], 'year': monthYear[0] },
+                success: function(data) {
+                    var ctx = document.getElementById('myRegionChart').getContext('2d');
+                    if(window.bar != undefined) 
+                        window.bar.destroy(); 
+                    window.bar = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.diesel_data.map(function(item) { return item.region__station; }),
+                            datasets: [{
+                                label: 'Diesel',
+                                data: data.diesel_data.map(function(item) { return item.total_fuel_issued; }),
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Petrol',
+                                data: data.petrol_data.map(function(item) { return item.total_fuel_issued; }),
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    // text: 'Monthly Fuel consumption per region/station',
+                                    font: {
+                                        size: 30
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    });
+    </script>
+
+ <!-- Historic consumption chart script -->
+<script>
+    // Fetch the data from the server
+    fetch('/historic-consumption/')
+        .then(response => response.json())
+        .then(data => {
+            let months = Object.keys(data);
+
+            // Sort the months from oldest to newest
+            months.sort();
+
+            // Populate the select element with the months
+            let monthSelect = document.getElementById('monthSelect');
+            months.forEach(month => {
+                let option = document.createElement('option');
+                option.value = month;
+                option.text = month;
+                monthSelect.appendChild(option);
+            });
+
+            // Create the chart
+            let ctx = document.getElementById('historicAnalysisChart').getContext('2d');
+            let myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [],  // Regions
+                    datasets: [{
+                        label: 'Diesel Quantity (ltrs)',
+                        data: [],  // Diesel quantities
+                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Petrol Quantity (ltrs)',
+                        data: [],  // Petrol quantities
+                        backgroundColor: 'rgba(220, 53, 69, 0.5)',
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Diesel Cost (ksh)',
+                        data: [],  // Diesel costs
+                        backgroundColor: 'rgba(0, 255, 0, 0.5)',
+                        borderColor: 'rgba(0, 255, 0, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Petrol Cost (ksh)',
+                        data: [],  // Petrol costs
+                        backgroundColor: 'rgba(255, 0, 0, 0.5)',
+                        borderColor: 'rgba(255, 0, 0, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Update the chart when the selected month changes
+            monthSelect.addEventListener('change', function() {
+                let month = this.value;
+                let monthData = data[month];
+
+                myChart.data.labels = Object.keys(monthData);
+                myChart.data.datasets[0].data = Object.values(monthData).map(regionData => regionData.Diesel.quantity);
+                myChart.data.datasets[1].data = Object.values(monthData).map(regionData => regionData.Petrol.quantity);
+                myChart.data.datasets[2].data = Object.values(monthData).map(regionData => regionData.Diesel.cost);
+                myChart.data.datasets[3].data = Object.values(monthData).map(regionData => regionData.Petrol.cost);
+                myChart.update();
+            });
+
+            // Trigger the change event to update the chart with the initial month
+            monthSelect.dispatchEvent(new Event('change'));
+        });
+</script>
 
 {% endblock content %}
 

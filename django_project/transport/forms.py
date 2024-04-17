@@ -2,6 +2,8 @@ from django.forms import fields
 from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
 from django.forms.widgets import NumberInput, DateInput
+from django.core.exceptions import ValidationError
+from decimal import Decimal
 from .models import (Assign_fuel, 
                     Request_fuel, 
                     Vehicle_register, 
@@ -26,7 +28,9 @@ from .models import (Assign_fuel,
                     Motor_bike_make,
                     Motor_bike_model,
                     Motor_bike_register,
-                    Fuel_mgt_mb)
+                    Fuel_mgt_mb,
+                    Bulk_Fuel_Request,
+                    Generator)
 from django.utils import timezone
 from django.forms import DateInput
 from django.db.models import Q
@@ -64,11 +68,11 @@ class DriverForm(forms.ModelForm):
     class Meta:
         model = Driver
         fields = ('full_name', 'pf_no', 'gender', 'region_assigned', 'license_number', 'expiry_date', 'driver_history', 'assigned_vehicle')
-        
 
-        widgets = {'expiry_date': DateInput( format=('%Y-%m-%d'), 
-               attrs={'type': 'date' }),
-               }
+        widgets = {
+            'manufacture_year': DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+            'vehicle_registration_date': DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+        }
 
 class DriverEditForm(forms.ModelForm):
 
@@ -298,7 +302,7 @@ class Fuel_mgt_xnForm(forms.ModelForm):
     class Meta:
         model = Fuel_mgt_xn
         fields = ('assign_request', 'region', 'work_ticket_number', 'registration_no', 'vendor', 'vendor_location', 'fuel_type_requested',
-                     'price_per_liter', 'fprice', 'fuel_amount_requested', 'total_price', 'discount', 'current_mileage', 'driver_name', 'region_code')
+                     'price_per_liter', 'fprice', 'fuel_amount_requested', 'total_price', 'discount', 'current_mileage', 'driver_name', 'region_code', 'site_image', 'previous_worksheet', 'engine_hours')
 
 
         widgets = {
@@ -306,6 +310,10 @@ class Fuel_mgt_xnForm(forms.ModelForm):
             'fuel_amount_requested': forms.NumberInput(attrs={'onkeyup': 'reMultiply()',}),
             'total_price': forms.NumberInput(attrs={'readonly': 'true',}),
             'fprice': forms.NumberInput(attrs={'type':'hidden',}),
+            'site_image': forms.ClearableFileInput(attrs={'style': 'display: none;'}),
+            'previous_worksheet': forms.ClearableFileInput(attrs={'style': 'display: none;'}),
+            'engine_hours': forms.TextInput(attrs={'style': 'display: none;'}),        
+        
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)       
@@ -338,30 +346,54 @@ class Fuel_mgt_xnForm(forms.ModelForm):
             self.fields['price_per_liter'].queryset = self.instance.fuel_type_requested.price_per_liter_set.order_by('fuel_name')  
             self.fields['discount'].queryset = self.instance.fuel_type_requested.discount_set.order_by('fuel_name')  
 
+
     def clean(self):
         cleaned_data = super().clean() 
         registration_no = cleaned_data.get('registration_no')
+        driver_name = cleaned_data.get('driver_name')
+        fuel_amount_requested = cleaned_data.get('fuel_amount_requested')
+        fuel_type_requested = cleaned_data.get('fuel_type_requested')
         price_per_liter = cleaned_data.get('price_per_liter')
         fuel_type_requested = cleaned_data.get('fuel_type_requested')
         price_per_liter = cleaned_data.get('price_per_liter')
         total = cleaned_data.get('total')
         discount = cleaned_data.get('discount') 
-
+        current_mileage = cleaned_data.get('current_mileage')
+        
         yesterday = timezone.now() - timezone.timedelta(days=1)
         if Fuel_mgt_xn.objects.filter(registration_no=registration_no, date_requested__gt=yesterday).exists():
             raise forms.ValidationError(f'This vehicle has an existing request raised today.')
 
-        # if Vehicle_register.objects.filter(operational_status='grounded').values():
-        #     raise forms.ValidationError(f'This vehicle is listed as grounded cannot be fueled, Kindly contact the fleet administrator for assistance')
-        #Entry.objects.filter(~Q(date = 2006))
-        #if total != price per liter * fuel amount requested
-            #raise forms.ValidationError(f'seems there's an error in the total cost! kindly check again and submit')
+        # Check if fuel_amount_requested is greater than vehicle's fuel_capacity
+        try:
+            vehicle = Vehicle_register.objects.get(registration_no=registration_no)
+        except Vehicle_register.DoesNotExist:
+            raise ValidationError("Vehicle with this registration number does not exist.")
+        
+        # Get the last fuel request for this vehicle
+        last_fuel_request = Fuel_mgt_xn.objects.filter(registration_no=self.instance.registration_no).order_by('-date_requested').first()
+
+    # Get the last fuel request for this vehicle
+        last_fuel_request = Fuel_mgt_xn.objects.filter(registration_no=self.instance.registration_no).order_by('-date_requested').first()
+
+        previous_mileage = None
+        if last_fuel_request:
+            # Set the previous mileage to the current mileage of the last fuel request
+            previous_mileage = float(last_fuel_request.current_mileage)  # convert to float
+
+        if current_mileage is not None and previous_mileage is not None and current_mileage < previous_mileage:
+            self.add_error('current_mileage', 'Current mileage cannot be less than previous mileage.')        #check against entering fuel greater than tank value  
+        
+        if fuel_amount_requested > Decimal(vehicle.fuel_tank_capacity):
+            raise ValidationError("Fuel amount requested cannot be greater than vehicle's fuel tank capacity. Review your request")
+        return cleaned_data
+
 
 class Fuel_mgt_xn_issueForm(forms.ModelForm):
-
+  
     class Meta:
         model = Fuel_mgt_xn
-        fields = ('vendor_location','fuel_amount_requested', 'liters_served', 'fuel_issue_complete')
+        fields = ('vendor_location','fuel_amount_requested', 'liters_served', 'fuel_Img', 'fuel_issue_complete')
 
     def __init__(self, *args, **kwargs):
         super(Fuel_mgt_xn_issueForm, self).__init__(*args, **kwargs)
@@ -472,3 +504,66 @@ class Fuel_mgt_mbForm(forms.ModelForm):
         #Entry.objects.filter(~Q(date = 2006))
         #if total != price per liter * fuel amount requested
             #raise forms.ValidationError(f'seems there's an error in the total cost! kindly check again and submit')
+class BulkFuelForm(forms.ModelForm):
+    class Meta:
+        model = Bulk_Fuel_Request
+        fields = ('assign_request', 'region', 'registration_no', 'driver_name', 'vendor', 'vendor_location', 'fuel_type_requested', 'fuel_amount_requested', 'price_per_liter', 
+                  'current_plant_hours', 'fprice', 'fuel_amount_requested', 'total_price', 'discount','region_code')
+
+
+        widgets = {
+            'price_per_liter': forms.Select(attrs={'onchange': 'PriceSelectedTextValue(this)',}),
+            'fuel_amount_requested': forms.NumberInput(attrs={'onkeyup': 'reMultiply()',}),
+            'total_price': forms.NumberInput(attrs={'readonly': 'true',}),
+            'fprice': forms.NumberInput(attrs={'type':'hidden',}),
+        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)       
+        self.fields['vendor_location'].queryset = Vendor_station.objects.none()
+        self.fields['fuel_type_requested'].queryset = Vendor_fuel_types.objects.none()
+        self.fields['price_per_liter'].queryset = Fuel_price.objects.none()
+        self.fields['discount'].queryset = Vendor_price.objects.none()
+
+        if 'vendor' in self.data:
+            try:
+                vendor_name_id = int(self.data.get('vendor'))
+
+                self.fields['vendor_location'].queryset = Vendor_station.objects.filter(vendor_name_id=vendor_name_id).order_by('vendor_location')
+                self.fields['fuel_type_requested'].queryset = Vendor_fuel_types.objects.filter(vendor_name_id=vendor_name_id).order_by('vendor_name')
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty child queryset
+        elif self.instance.pk:
+            self.fields['vendor_location'].queryset = self.instance.vendor.vendor_location.order_by('vendor')
+            self.fields['fuel_type_requested'].queryset = self.instance.vendor.fuel_type_requested.order_by('vendor') 
+
+        if 'fuel_type_requested' in self.data:
+            try:
+                fuel_name_id = int(self.data.get('fuel_type_requested'))
+
+                self.fields['discount'].queryset = Vendor_price.objects.filter(fuel_name_id=fuel_name_id).order_by('fuel_name')
+                self.fields['price_per_liter'].queryset = Vendor_price.objects.filter(fuel_name_id=fuel_name_id).order_by('fuel_name')
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty queryset
+        elif self.instance.pk:
+            self.fields['price_per_liter'].queryset = self.instance.fuel_type_requested.price_per_liter_set.order_by('fuel_name')  
+            self.fields['discount'].queryset = self.instance.fuel_type_requested.discount_set.order_by('fuel_name')  
+
+    def clean(self):
+        cleaned_data = super().clean() 
+        registration_no = cleaned_data.get('registration_no')
+        price_per_liter = cleaned_data.get('price_per_liter')
+        fuel_type_requested = cleaned_data.get('fuel_type_requested')
+        price_per_liter = cleaned_data.get('price_per_liter')
+        total = cleaned_data.get('total')
+        discount = cleaned_data.get('discount') 
+
+        yesterday = timezone.now() - timezone.timedelta(days=1)
+        # if Fuel_mgt_xn.objects.filter(registration_no=registration_no, date_requested__gt=yesterday).exists():
+        #     raise forms.ValidationError(f'This vehicle has an existing request raised today.')
+
+class GeneratorForm(forms.ModelForm):
+
+    class Meta:
+        model = Generator
+        fields = ('serial_number', 'make', 'model', 'location', 'output', 'fuel_capacity')
+

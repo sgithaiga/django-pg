@@ -1,0 +1,77 @@
+{% extends "transport/base.html" %}
+
+{% load widget_tweaks %}
+
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{ form.media }}
+
+{% block content %}
+<h2>Regional fuel statistics</h2>
+    <hr>
+    <div class="d-flex justify-content-center">
+        <div class="p-2 mx-auto" style="width: 800px;">
+            <h4>Select month to view consumption</h4>
+            <input type="month" id="month" name="month">
+            <button id="submit">Submit</button>
+            <canvas id="myChart" width="600" height="400"></canvas>        
+        </div>
+    </div>
+
+<script>
+    $(document).ready(function() {
+        $('#submit').click(function() {
+            var monthYear = $('#month').val().split('-');
+            $.ajax({
+                url: "/monthly-fuel-issued-per-region/",
+                method: 'GET',
+                data: { 'month': monthYear[1], 'year': monthYear[0] },
+                success: function(data) {
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    if(window.bar != undefined) 
+                        window.bar.destroy(); 
+                    window.bar = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.diesel_data.map(function(item) { return item.region__station; }),
+                            datasets: [{
+                                label: 'Diesel',
+                                data: data.diesel_data.map(function(item) { return item.total_fuel_issued; }),
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Petrol',
+                                data: data.petrol_data.map(function(item) { return item.total_fuel_issued; }),
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    // text: 'Monthly Fuel consumption per region/station',
+                                    font: {
+                                        size: 30
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    });
+    </script>
+
+{% endblock content %}
+

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consumption Analysis</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@1.1.0"></script>
+</head>
+<body>
+    <h1>Consumption Analysis</h1>
+
+    <label for="registrationNoSelect">Select Vehicle:</label>
+    <select id="registrationNoSelect"></select>
+
+    <canvas id="myChart"></canvas>
+
+    <script>
+        // Fetch the data from the server
+        fetch('/vehicle-historic-consumption/')
+            .then(response => response.json())
+            .then(data => {
+                let months = Object.keys(data).sort();
+
+                // Get all unique registration_no from the data
+                let registrationNos = [...new Set(months.flatMap(month => Object.keys(data[month])))];
+
+                // Populate the select element with the registration_no
+                let registrationNoSelect = document.getElementById('registrationNoSelect');
+                registrationNos.forEach(registrationNo => {
+                    let option = document.createElement('option');
+                    option.value = registrationNo;
+                    option.text = registrationNo;
+                    registrationNoSelect.appendChild(option);
+                });
+
+                // Initialize Select2 on the select element
+                $(document).ready(function() {
+                    $('#registrationNoSelect').select2();
+                });
+
+                // Create the line chart
+                let ctx = document.getElementById('myChart').getContext('2d');
+                let myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: months,  // Months
+                        datasets: [{
+                            label: 'Quantity',
+                            data: [],  // Quantities
+                            borderColor: 'rgba(0, 123, 255, 1)',
+                            fill: false
+                        }, {
+                            label: 'Total Amount',
+                            data: [],  // Total amounts
+                            borderColor: 'rgba(220, 53, 69, 1)',
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'month'
+                                }
+                            },
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                // Function to update the chart
+                function updateChart() {
+                    let registrationNo = registrationNoSelect.value;
+
+                    myChart.data.datasets[0].data = months.map(month => data[month][registrationNo]?.quantity || 0);
+                    myChart.data.datasets[1].data = months.map(month => data[month][registrationNo]?.amount || 0);
+                    myChart.update();
+                }
+
+                // Update the chart when the selected registration_no changes
+                $('#registrationNoSelect').on('change', updateChart);
+
+                // Update the chart with the initial registration_no
+                updateChart();
+            });
+    </script>
+</body>
+</html>

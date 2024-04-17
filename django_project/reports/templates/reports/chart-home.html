@@ -1,5 +1,99 @@
-<div id="container"></div>
-<script src="https://code.highcharts.com/highcharts.src.js"></script>
+{% extends "transport/base.html" %}
+
+{% load widget_tweaks %}
+
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{ form.media }}
+
+{% block content %}
+<h2>Vehicle Data Chart</h2> 
+    <hr>
+<div class="row">
+    <div class="col-md-10">
+        <div class="d-flex justify-content-center">
+            <div class="p-2 mx-auto" style="width: 800px;">
+                <h4>Select vehicle to view fuel data</h4>
+                <select id="registration_no"></select>
+                <canvas id="myChart" width="700" height="400"></canvas>        
+            </div>
+        </div>    
+    
+    </div>
+</div>
+
 <script>
-  Highcharts.chart('container', {{ chart|safe }});
-</script>
+    var myChart;  // Declare the chart variable outside the AJAX call
+
+    $(document).ready(function() {
+        $.ajax({
+            url: "{% url 'registration-no' %}",
+            method: 'GET',
+            success: function(data) {
+                var select = $('#registration_no');
+                data.forEach(function(item) {
+                    select.append($('<option>', {
+                        value: item,
+                        text: item
+                    }));
+                });
+            }
+        });
+
+        $('#registration_no').change(function() {
+            var registration_no = $(this).val();
+            $.ajax({
+                url: "{% url 'chart-data' %}",
+                method: 'GET',
+                data: { 'registration_no': registration_no },
+                success: function(data) {
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    if (myChart) {  // If a chart instance exists
+                        myChart.destroy();  // Destroy the existing chart
+                    }
+                    myChart = new Chart(ctx, {  // Create a new chart and assign it to the chart variable
+                        type: 'line', // Change the chart type to 'line'
+                        data: {
+                            labels: data.map(function(item) { return item.date; }),
+                            datasets: [{
+                                label: 'Average Consumption',
+                                data: data.map(function(item) { return item.average_consumption; }),
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                fill: 'origin' // Add the 'fill' option
+                            },
+                            {
+                                label: 'Distance Travelled',
+                                data: data.map(function(item) { return item.distance_covered; }), // Assuming 'distance_covered' is available in your data
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)', // Change the color for this dataset
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1,
+                                fill: 'origin'
+                            },
+                            {
+                                label: 'Fuel Issued',
+                                data: data.map(function(item) { return item.fuel_issued; }), // Assuming 'fuel_issued' is available in your data
+                                backgroundColor: 'rgba(153, 102, 255, 0.2)', // Change the color for this dataset
+                                borderColor: 'rgba(153, 102, 255, 1)',
+                                borderWidth: 1,
+                                fill: 'origin'
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    });
+    </script>
+
+{% endblock content %}
+
